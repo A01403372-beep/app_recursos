@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🌱 Reto de los Recursos</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --verde:   #16a34a;
+  --verde-l: #dcfce7;
+  --verde-d: #166534;
+  --verde-dot: #22c55e;
+  --am:      #d97706;
+  --am-l:    #fef3c7;
+  --am-d:    #92400e;
+  --am-dot:  #f59e0b;
+  --rojo:    #dc2626;
+  --rojo-l:  #fee2e2;
+  --rojo-d:  #991b1b;
+  --rojo-dot:#ef4444;
+  --bg:      #f0fdf4;
+  --card:    #ffffff;
+  --border:  #e2e8f0;
+  --text:    #0f172a;
+  --muted:   #64748b;
+  --radius:  14px;
+  --header-h:58px;
+  --tab-h:   50px;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex; flex-direction: column;
+}
+
+/* ── LOBBY ─────────────────────────────────────────── */
+#lobby {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem; overflow-y: auto;
+}
+
+.lobby-wrap {
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 2rem 1.75rem;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.06);
+}
+
+.lobby-logo {
+  text-align: center; margin-bottom: 1.5rem;
+}
+.lobby-logo .icon { font-size: 2.8rem; display: block; margin-bottom: .5rem; }
+.lobby-logo h1 { font-size: 1.35rem; font-weight: 700; color: var(--verde-d); }
+.lobby-logo p  { font-size: .85rem; color: var(--muted); margin-top: 3px; }
+
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
+.field input, .field select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field select:focus { border-color: var(--verde); }
+.field input[id="f-code"] { text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+
+.lobby-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+
+.btn { width: 100%; padding: 13px; border-radius: 11px; font-size: .95rem; font-weight: 600; cursor: pointer; border: none; transition: all .18s; }
+.btn-primary { background: var(--verde); color: #fff; }
+.btn-primary:hover { background: var(--verde-d); }
+.btn-primary:active { transform: scale(.97); }
+.btn-secondary { background: transparent; border: 1.5px solid var(--verde); color: var(--verde); }
+.btn-secondary:hover { background: var(--verde-l); }
+
+.divider { display: flex; align-items: center; gap: 10px; margin: 4px 0; color: var(--muted); font-size: .8rem; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.lobby-error {
+  background: var(--rojo-l); color: var(--rojo-d);
+  border-radius: 8px; padding: 10px 14px; font-size: .85rem;
+  margin-top: 12px; display: none;
+}
+
+/* ── GAME LAYOUT ────────────────────────────────────── */
+#game {
+  display: none; flex-direction: column; height: 100%;
+}
+
+/* Header */
+.game-header {
+  height: var(--header-h); flex-shrink: 0;
+  background: var(--card); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; gap: .5rem;
+  position: relative; z-index: 10;
+}
+.gh-left { display: flex; flex-direction: column; }
+.gh-code {
+  font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+  color: var(--muted); text-transform: uppercase;
+}
+.gh-name { font-size: .95rem; font-weight: 700; color: var(--text); }
+.gh-team { font-size: .7rem; color: var(--muted); }
+.ronda-badge {
+  background: var(--verde); color: #fff;
+  padding: 6px 14px; border-radius: 100px;
+  font-size: .75rem; font-weight: 700; letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+/* Round info banner */
+.ronda-banner {
+  padding: .6rem 1rem; font-size: .82rem; font-weight: 500;
+  text-align: center; flex-shrink: 0; line-height: 1.4;
+  border-bottom: 1px solid var(--border);
+}
+.ronda-banner.r1 { background: #eff6ff; color: #1d4ed8; }
+.ronda-banner.r2 { background: var(--verde-l); color: var(--verde-d); }
+.ronda-banner.r3 { background: #fdf4ff; color: #7e22ce; }
+
+/* Tabs */
+.tab-bar {
+  display: flex; background: var(--card);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.tab-btn {
+  flex: 1; padding: 0; height: var(--tab-h);
+  background: none; border: none; border-bottom: 3px solid transparent;
+  font-size: .82rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; transition: all .18s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+/* Tab content */
+.tab-pane { display: none; flex: 1; overflow-y: auto; }
+.tab-pane.active { display: flex; flex-direction: column; }
+
+/* ── TAB: MIS FICHAS ────────────────────────────────── */
+.mf-scroll { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+
+.mi-torre-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem;
+}
+.torre-card-title {
+  font-size: .75rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem;
+}
+.mi-torre-dots {
+  display: flex; flex-wrap: wrap; gap: 5px; min-height: 40px;
+}
+.dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+.dot:active { transform: scale(.85); }
+.dot.verde   { background: var(--verde-dot); }
+.dot.amarillo{ background: var(--am-dot); }
+.dot.rojo    { background: var(--rojo-dot); }
+.dot.vacio   { background: var(--border); opacity: .4; }
+
+/* Stats row */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: .6rem .5rem;
+  text-align: center;
+}
+.stat-num { font-size: 1.4rem; font-weight: 800; display: block; }
+.stat-label { font-size: .68rem; color: var(--muted); }
+.stat-card.verde-c .stat-num   { color: var(--verde); }
+.stat-card.amarillo-c .stat-num{ color: var(--am); }
+.stat-card.rojo-c .stat-num    { color: var(--rojo); }
+.stat-card.puntos-c .stat-num  { color: #7c3aed; }
+
+/* Acciones */
+.acciones-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem;
+}
+.acciones-title { font-size: .75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
+
+.accion-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .6rem 0; border-bottom: 1px solid var(--border);
+}
+.accion-row:last-child { border-bottom: none; }
+.accion-info { display: flex; flex-direction: column; }
+.accion-nombre { font-size: .9rem; font-weight: 600; }
+.accion-desc   { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+.accion-btns   { display: flex; gap: 6px; align-items: center; }
+
+.ficha-btn {
+  width: 36px; height: 36px; border-radius: 9px;
+  border: none; cursor: pointer; font-size: 1.1rem; font-weight: 700;
+  transition: all .15s; display: flex; align-items: center; justify-content: center;
+}
+.ficha-btn:active { transform: scale(.88); }
+.ficha-btn.usar-v  { background: var(--verde-l); color: var(--verde-d); }
+.ficha-btn.usar-a  { background: var(--am-l); color: var(--am-d); }
+.ficha-btn.dev-v   { background: #f1f5f9; color: var(--muted); font-size: .9rem; }
+.ficha-btn.dev-a   { background: #f1f5f9; color: var(--muted); font-size: .9rem; }
+.ficha-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Banco card (ronda 3) */
+.banco-card {
+  background: #fdf4ff; border: 1.5px solid #d8b4fe;
+  border-radius: var(--radius); padding: 1rem;
+}
+.banco-title { font-size: .8rem; font-weight: 700; color: #7e22ce; margin-bottom: .75rem; display: flex; align-items: center; gap: 6px; }
+.banco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.banco-item {
+  background: #fff; border: 1px solid #e9d5ff; border-radius: 10px;
+  padding: .7rem; text-align: center;
+}
+.banco-count { font-size: 1.6rem; font-weight: 800; display: block; }
+.banco-count.verde   { color: var(--verde); }
+.banco-count.amarillo{ color: var(--am); }
+.banco-label { font-size: .72rem; color: var(--muted); margin-bottom: 8px; display: block; }
+.banco-btn {
+  width: 100%; padding: 8px; border-radius: 8px; border: none;
+  font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.banco-btn.verde   { background: var(--verde-l); color: var(--verde-d); }
+.banco-btn.amarillo{ background: var(--am-l); color: var(--am-d); }
+.banco-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+/* Controles facilitador */
+.facilitador-card {
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-radius: var(--radius); padding: 1rem;
+}
+.facilitador-title {
+  font-size: .75rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.fac-btns { display: flex; flex-direction: column; gap: 8px; }
+.fac-btn {
+  width: 100%; padding: 11px; border-radius: 9px; border: none;
+  font-size: .88rem; font-weight: 600; cursor: pointer; transition: all .18s;
+}
+.fac-btn:active { transform: scale(.97); }
+.fac-btn.avanzar   { background: var(--verde); color: #fff; }
+.fac-btn.avanzar:hover { background: var(--verde-d); }
+.fac-btn.avanzar:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+.fac-btn.regen     { background: #dcfce7; color: var(--verde-d); }
+.fac-btn.reiniciar { background: #f1f5f9; color: var(--muted); }
+
+/* ── TAB: TORRES ────────────────────────────────────── */
+.torres-scroll { padding: 1rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+.equipo-section {}
+.equipo-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: .6rem;
+}
+.equipo-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.equipo-nombre { font-size: .85rem; font-weight: 700; }
+.equipo-pts { font-size: .78rem; color: var(--muted); margin-left: auto; }
+
+.equipo-players {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+}
+.equipo-players::-webkit-scrollbar { display: none; }
+
+.jugador-torre {
+  flex-shrink: 0;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: .6rem;
+  min-width: 76px; text-align: center;
+}
+.jugador-torre.es-yo { border-color: var(--verde); background: var(--verde-l); }
+
+.jt-dots {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center; min-height: 16px;
+  margin-bottom: 5px; width: 68px;
+}
+.jt-dot {
+  width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+}
+.jt-dot.verde    { background: var(--verde-dot); }
+.jt-dot.amarillo { background: var(--am-dot); }
+.jt-dot.rojo     { background: var(--rojo-dot); }
+
+.jt-nombre {
+  font-size: .7rem; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 68px;
+}
+.jt-puntos {
+  font-size: .72rem; font-weight: 700; color: #7c3aed;
+}
+
+/* ── TAB: RANKING ───────────────────────────────────── */
+.ranking-scroll { padding: 1rem; }
+
+.rank-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: .75rem 1rem;
+  margin-bottom: 8px;
+  transition: border-color .2s;
+}
+.rank-row.lider { border-color: var(--am-dot); }
+.rank-pos { font-size: 1.1rem; min-width: 28px; text-align: center; }
+.rank-info { flex: 1; min-width: 0; }
+.rank-nombre { font-size: .9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-equipo { font-size: .72rem; color: var(--muted); }
+.rank-bar-wrap { flex: 1.5; height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
+.rank-bar { height: 100%; border-radius: 100px; background: #7c3aed; transition: width .5s ease; }
+.rank-pts { font-size: .95rem; font-weight: 800; color: #7c3aed; min-width: 42px; text-align: right; }
+
+/* ── TOAST ──────────────────────────────────────────── */
+#toast-wrap {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  pointer-events: none;
+}
+.toast-item {
+  background: #1e293b; color: #f8fafc;
+  padding: 9px 18px; border-radius: 100px;
+  font-size: .82rem; font-weight: 500;
+  white-space: nowrap; max-width: 90vw;
+  animation: toastIn .25s ease forwards;
+}
+.toast-item.success { background: var(--verde-d); }
+.toast-item.error   { background: var(--rojo-d); }
+.toast-item.round   { background: #7c3aed; }
+.toast-item.join    { background: #0369a1; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TEAM COLORS ────────────────────────────────────── */
+.team-alfa    { background: #6366f1; }
+.team-beta    { background: #ec4899; }
+.team-gamma   { background: #f59e0b; }
+.team-delta   { background: #10b981; }
+.team-epsilon { background: #3b82f6; }
+
+/* Utils */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════ LOBBY ══ -->
+<div id="lobby">
+  <div class="lobby-wrap">
+    <div class="lobby-logo">
+      <span class="icon">🌱</span>
+      <h1>Reto de los Recursos</h1>
+      <p>Juego multijugador de sostenibilidad</p>
+    </div>
+
+    <div class="field">
+      <label for="f-nombre">Tu nombre</label>
+      <input id="f-nombre" type="text" placeholder="Ej. María García" maxlength="20" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="f-equipo">Tu equipo</label>
+      <select id="f-equipo">
+        <option value="">— Elige tu equipo —</option>
+        <option value="Alfa">🟣 Equipo Alfa</option>
+        <option value="Beta">🩷 Equipo Beta</option>
+        <option value="Gamma">🟡 Equipo Gamma</option>
+        <option value="Delta">🟢 Equipo Delta</option>
+        <option value="Epsilon">🔵 Equipo Épsilon</option>
+      </select>
+    </div>
+
+    <div class="lobby-btns">
+      <button class="btn btn-primary" onclick="crearSala()">✨ Crear nueva sala</button>
+      <div class="divider">o únete con un código</div>
+      <div class="field" style="margin:0">
+        <label for="f-code">Código de sala</label>
+        <input id="f-code" type="text" placeholder="XXXXX" maxlength="5" autocomplete="off">
+      </div>
+      <button class="btn btn-secondary" onclick="unirse()">→ Unirse a sala</button>
+    </div>
+
+    <div class="lobby-error" id="lobby-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ GAME ══ -->
+<div id="game">
+
+  <!-- Header -->
+  <div class="game-header">
+    <div class="gh-left">
+      <span class="gh-code" id="gh-code">SALA ·····</span>
+      <span class="gh-name" id="gh-name">—</span>
+      <span class="gh-team" id="gh-team">—</span>
+    </div>
+    <span class="ronda-badge" id="ronda-badge">Ronda 1</span>
+  </div>
+
+  <!-- Round banner -->
+  <div class="ronda-banner r1" id="ronda-banner">
+    🔓 Ronda 1 — Uso libre · Usa todas las fichas que quieras
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('fichas',this)">🧩 Mis Fichas</button>
+    <button class="tab-btn" onclick="showTab('torres',this)">🏰 Torres</button>
+    <button class="tab-btn" onclick="showTab('ranking',this)">🏆 Ranking</button>
+  </div>
+
+  <!-- ── Tab: Mis Fichas ── -->
+  <div id="tab-fichas" class="tab-pane active">
+    <div class="mf-scroll">
+
+      <!-- Torre personal -->
+      <div class="mi-torre-card">
+        <div class="torre-card-title">Mi torre de fichas</div>
+        <div class="mi-torre-dots" id="mi-torre-dots"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card verde-c">
+          <span class="stat-num" id="s-verde">8</span>
+          <span class="stat-label">🟢 Verdes</span>
+        </div>
+        <div class="stat-card amarillo-c">
+          <span class="stat-num" id="s-amarillo">5</span>
+          <span class="stat-label">🟡 Amarillas</span>
+        </div>
+        <div class="stat-card rojo-c">
+          <span class="stat-num" id="s-rojo">0</span>
+          <span class="stat-label">🔴 Residuos</span>
+        </div>
+        <div class="stat-card puntos-c">
+          <span class="stat-num" id="s-puntos">0</span>
+          <span class="stat-label">✨ Puntos</span>
+        </div>
+      </div>
+
+      <!-- Acciones del jugador -->
+      <div class="acciones-card">
+        <div class="acciones-title">Usar fichas</div>
+
+        <div class="accion-row">
+          <div class="accion-info">
+            <span class="accion-nombre">🟢 Ficha Verde</span>
+            <span class="accion-desc">Recurso renovable · +1 punto · sin residuo</span>
+          </div>
+          <div class="accion-btns">
+            <button class="ficha-btn dev-v" id="btn-dev-v" onclick="emitir('devolver-verde')" title="Deshacer">↩</button>
+            <button class="ficha-btn usar-v" id="btn-usar-v" onclick="emitir('usar-verde')">+</button>
+          </div>
+        </div>
+
+        <div class="accion-row">
+          <div class="accion-info">
+            <span class="accion-nombre">🟡 Ficha Amarilla</span>
+            <span class="accion-desc">Recurso limitado · +3 puntos · genera 1 residuo 🔴</span>
+          </div>
+          <div class="accion-btns">
+            <button class="ficha-btn dev-a" id="btn-dev-a" onclick="emitir('devolver-amarillo')" title="Deshacer">↩</button>
+            <button class="ficha-btn usar-a" id="btn-usar-a" onclick="emitir('usar-amarillo')">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banco (solo ronda 3) -->
+      <div class="banco-card hidden" id="banco-card">
+        <div class="banco-title">🏦 Banco Común de Recursos</div>
+        <div class="banco-grid">
+          <div class="banco-item">
+            <span class="banco-count verde" id="banco-verde">20</span>
+            <span class="banco-label">Fichas Verdes</span>
+            <button class="banco-btn verde" id="btn-banco-v" onclick="emitir('tomar-banco',{tipo:'verde'})">Tomar 1 verde</button>
+          </div>
+          <div class="banco-item">
+            <span class="banco-count amarillo" id="banco-amarillo">15</span>
+            <span class="banco-label">Fichas Amarillas</span>
+            <button class="banco-btn amarillo" id="btn-banco-a" onclick="emitir('tomar-banco',{tipo:'amarillo'})">Tomar 1 amarilla</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controles facilitador -->
+      <div class="facilitador-card" id="facilitador-card" style="display:none">
+        <div class="facilitador-title">⚙️ Controles del facilitador</div>
+        <div class="fac-btns">
+          <button class="fac-btn avanzar" id="btn-sig-ronda" onclick="confirmarSigRonda()">
+            Avanzar a Ronda 2 →
+          </button>
+          <button class="fac-btn regen hidden" id="btn-regen" onclick="emitir('aplicar-regen')">
+            🌱 Aplicar regeneración
+          </button>
+          <button class="fac-btn reiniciar" onclick="confirmarReinicio()">
+            ↺ Reiniciar juego
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Tab: Torres ── -->
+  <div id="tab-torres" class="tab-pane">
+    <div class="torres-scroll" id="torres-container">
+      <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Esperando jugadores...</p>
+    </div>
+  </div>
+
+  <!-- ── Tab: Ranking ── -->
+  <div id="tab-ranking" class="tab-pane">
+    <div class="ranking-scroll" id="ranking-container"></div>
+  </div>
+
+</div>
+
+<!-- Toast container -->
+<div id="toast-wrap"></div>
+
+<!-- Confirm modal faux-overlay -->
+<div id="modal-wrap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:1.5rem;">
+  <div id="modal-box" style="background:#fff;border-radius:18px;padding:1.75rem;width:100%;max-width:320px;text-align:center;">
+    <div id="modal-icon" style="font-size:2.2rem;margin-bottom:.5rem">❓</div>
+    <h3 id="modal-title" style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem"></h3>
+    <p id="modal-desc" style="font-size:.85rem;color:#64748b;margin-bottom:1.25rem;line-height:1.5"></p>
+    <div style="display:flex;gap:10px;">
+      <button onclick="cerrarModal()" style="flex:1;padding:11px;border-radius:9px;border:1.5px solid #e2e8f0;background:#fff;font-size:.9rem;cursor:pointer;">Cancelar</button>
+      <button id="modal-confirm" style="flex:1;padding:11px;border-radius:9px;border:none;background:#16a34a;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;"></button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+
+// ── Estado local ────────────────────────────────────────
+let myId   = null;
+let myRoom = null;
+let state  = null;  // snapshot completo del servidor
+let ronda  = 1;
+
+// ── Helpers UI ──────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showLobbyError(msg) {
+  const el = document.getElementById('lobby-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideLobbyError() {
+  document.getElementById('lobby-error').style.display = 'none';
+}
+
+// ── Toast ───────────────────────────────────────────────
+function showToast(msg, tipo = 'info') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast-item ' + tipo;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .3s';
+    setTimeout(() => el.remove(), 300);
+  }, 2800);
+}
+
+// ── Modal confirm ───────────────────────────────────────
+function abrirModal(icon, title, desc, confirmText, onConfirm) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-desc').textContent = desc;
+  const btn = document.getElementById('modal-confirm');
+  btn.textContent = confirmText;
+  btn.onclick = () => { cerrarModal(); onConfirm(); };
+  const wrap = document.getElementById('modal-wrap');
+  wrap.style.display = 'flex';
+}
+function cerrarModal() {
+  document.getElementById('modal-wrap').style.display = 'none';
+}
+
+// ── Socket helpers ──────────────────────────────────────
+function emitir(ev, data) { socket.emit(ev, data); }
+
+// ── Lobby actions ───────────────────────────────────────
+function getLobbyData() {
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const equipo = document.getElementById('f-equipo').value;
+  if (!nombre) { showLobbyError('Por favor escribe tu nombre.'); return null; }
+  if (!equipo) { showLobbyError('Por favor elige tu equipo.'); return null; }
+  hideLobbyError();
+  return { nombre, equipo };
+}
+
+function crearSala() {
+  const d = getLobbyData();
+  if (!d) return;
+  socket.emit('crear', d);
+}
+
+function unirse() {
+  const d = getLobbyData();
+  if (!d) return;
+  const code = document.getElementById('f-code').value.trim().toUpperCase();
+  if (!code || code.length !== 5) { showLobbyError('El código debe tener 5 caracteres.'); return; }
+  socket.emit('unirse', { ...d, code });
+}
+
+function confirmarSigRonda() {
+  if (ronda >= 3) return;
+  const msgs = ['', '¿Avanzar a la Ronda 2?', '¿Avanzar a la Ronda 3?'];
+  const descs = [
+    '',
+    'La regeneración de fichas verdes se aplicará automáticamente. Las fichas rojas reducen cuántas verdes recuperas.',
+    'Se activará el banco común de recursos para todos los jugadores.'
+  ];
+  abrirModal('🚀', msgs[ronda], descs[ronda], 'Avanzar', () => emitir('sig-ronda'));
+}
+
+function confirmarReinicio() {
+  abrirModal('↺', '¿Reiniciar el juego?', 'Se borrarán todos los puntos y fichas. Todos vuelven al estado inicial.', 'Reiniciar', () => emitir('reiniciar'));
+}
+
+// ── Entrar al juego ──────────────────────────────────────
+function entrarAlJuego(code, id) {
+  myId   = id;
+  myRoom = code;
+  document.getElementById('lobby').style.display  = 'none';
+  document.getElementById('game').style.display   = 'flex';
+  document.getElementById('gh-code').textContent  = 'SALA ' + code;
+}
+
+// ── Render completo del estado ───────────────────────────
+function render(s) {
+  state = s;
+  ronda = s.ronda;
+  const me = s.players[myId];
+  if (!me) return;
+
+  // Header
+  document.getElementById('gh-name').textContent = me.nombre;
+  document.getElementById('gh-team').textContent = 'Equipo ' + me.equipo;
+  document.getElementById('ronda-badge').textContent = 'Ronda ' + ronda;
+
+  // Round banner
+  const banners = {
+    1: { cls:'r1', txt:'🔓 Ronda 1 — Uso libre · Usa todas las fichas que quieras' },
+    2: { cls:'r2', txt:'🌱 Ronda 2 — Regeneración · Los recursos no usados se recuperan' },
+    3: { cls:'r3', txt:'🏦 Ronda 3 — Banco común · Comparte y usa recursos del grupo' }
+  };
+  const b = banners[ronda];
+  const banner = document.getElementById('ronda-banner');
+  banner.className = 'ronda-banner ' + b.cls;
+  banner.textContent = b.txt;
+
+  // Stats
+  document.getElementById('s-verde').textContent   = me.fichas.verde;
+  document.getElementById('s-amarillo').textContent = me.fichas.amarillo;
+  document.getElementById('s-rojo').textContent     = me.fichas.rojo;
+  document.getElementById('s-puntos').textContent   = me.puntos;
+
+  // Botones usar/devolver
+  document.getElementById('btn-usar-v').disabled = me.fichas.verde <= 0;
+  document.getElementById('btn-usar-a').disabled = me.fichas.amarillo <= 0;
+  document.getElementById('btn-dev-v').disabled  = me.puntos < 1;
+  document.getElementById('btn-dev-a').disabled  = me.puntos < 3 || me.fichas.rojo <= 0;
+
+  // Torre personal
+  renderMiTorre(me.fichas);
+
+  // Banco (ronda 3)
+  const bancoCard = document.getElementById('banco-card');
+  if (ronda === 3) {
+    bancoCard.classList.remove('hidden');
+    document.getElementById('banco-verde').textContent   = s.banco.verde;
+    document.getElementById('banco-amarillo').textContent = s.banco.amarillo;
+    document.getElementById('btn-banco-v').disabled = s.banco.verde <= 0;
+    document.getElementById('btn-banco-a').disabled = s.banco.amarillo <= 0;
+  } else {
+    bancoCard.classList.add('hidden');
+  }
+
+  // Controles facilitador — solo visible para quien creó la sala
+  const esFacilitador = myId === s.facilitador;
+  document.getElementById('facilitador-card').style.display = esFacilitador ? 'block' : 'none';
+
+  // Botones facilitador
+  const btnSig   = document.getElementById('btn-sig-ronda');
+  const btnRegen = document.getElementById('btn-regen');
+  btnSig.disabled = ronda >= 3;
+  btnSig.textContent = ronda < 3 ? `Avanzar a Ronda ${ronda + 1} →` : '✅ Ronda 3 (final)';
+  if (ronda === 2) btnRegen.classList.remove('hidden');
+  else btnRegen.classList.add('hidden');
+
+  // Torres tab
+  renderTorres(s);
+
+  // Ranking tab
+  renderRanking(s);
+}
+
+function renderMiTorre(fichas) {
+  const wrap = document.getElementById('mi-torre-dots');
+  wrap.innerHTML = '';
+  const total = 14;
+  const dots = [];
+  for (let i = 0; i < fichas.verde;    i++) dots.push('verde');
+  for (let i = 0; i < fichas.amarillo; i++) dots.push('amarillo');
+  for (let i = 0; i < fichas.rojo;     i++) dots.push('rojo');
+  while (dots.length < total) dots.push('vacio');
+  dots.forEach(tipo => {
+    const d = document.createElement('div');
+    d.className = 'dot ' + tipo;
+    wrap.appendChild(d);
+  });
+}
+
+// ── Colores de equipo ────────────────────────────────────
+const EQUIPO_COLOR = {
+  Alfa: '#6366f1', Beta: '#ec4899', Gamma: '#f59e0b',
+  Delta: '#10b981', Epsilon: '#3b82f6'
+};
+const EQUIPO_CLASS = {
+  Alfa: 'team-alfa', Beta: 'team-beta', Gamma: 'team-gamma',
+  Delta: 'team-delta', Epsilon: 'team-epsilon'
+};
+
+// ── Render Torres ─────────────────────────────────────────
+function renderTorres(s) {
+  const wrap = document.getElementById('torres-container');
+  wrap.innerHTML = '';
+
+  // Agrupar por equipo
+  const equipos = {};
+  Object.entries(s.players).forEach(([id, p]) => {
+    if (!equipos[p.equipo]) equipos[p.equipo] = [];
+    equipos[p.equipo].push({ id, ...p });
+  });
+
+  const eqNames = ['Alfa','Beta','Gamma','Delta','Epsilon'];
+
+  eqNames.forEach(eq => {
+    const players = equipos[eq];
+    if (!players || players.length === 0) return;
+
+    const totalPts = players.reduce((a, p) => a + p.puntos, 0);
+    const color = EQUIPO_COLOR[eq] || '#888';
+
+    const sec = document.createElement('div');
+    sec.className = 'equipo-section';
+    sec.innerHTML = `
+      <div class="equipo-header">
+        <div class="equipo-dot" style="background:${color}"></div>
+        <span class="equipo-nombre">Equipo ${eq}</span>
+        <span class="equipo-pts">${players.length} jugadores · ${totalPts} pts</span>
+      </div>
+      <div class="equipo-players" id="ep-${eq}"></div>
+    `;
+    wrap.appendChild(sec);
+
+    const playersWrap = sec.querySelector(`#ep-${eq}`);
+    players.forEach(p => {
+      const esYo = p.id === myId;
+      const card = document.createElement('div');
+      card.className = 'jugador-torre' + (esYo ? ' es-yo' : '');
+
+      // Dots pequeños
+      const allDots = [];
+      for (let i = 0; i < p.fichas.verde;    i++) allDots.push('verde');
+      for (let i = 0; i < p.fichas.amarillo; i++) allDots.push('amarillo');
+      for (let i = 0; i < p.fichas.rojo;     i++) allDots.push('rojo');
+      const dotsHTML = allDots.map(t => `<div class="jt-dot ${t}"></div>`).join('');
+
+      card.innerHTML = `
+        <div class="jt-dots">${dotsHTML || '<span style="font-size:.65rem;color:#aaa">vacío</span>'}</div>
+        <div class="jt-nombre" title="${p.nombre}">${esYo ? '⭐ ' : ''}${p.nombre}</div>
+        <div class="jt-puntos">${p.puntos} pts</div>
+      `;
+      playersWrap.appendChild(card);
+    });
+  });
+
+  if (wrap.innerHTML === '') {
+    wrap.innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Esperando jugadores...</p>';
+  }
+}
+
+// ── Render Ranking ────────────────────────────────────────
+function renderRanking(s) {
+  const wrap = document.getElementById('ranking-container');
+  const sorted = Object.entries(s.players)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => b.puntos - a.puntos);
+
+  const maxPts = Math.max(...sorted.map(p => p.puntos), 1);
+  const medals = ['🥇','🥈','🥉'];
+
+  wrap.innerHTML = sorted.map((p, i) => {
+    const esYo = p.id === myId;
+    const color = EQUIPO_COLOR[p.equipo] || '#888';
+    const pct = Math.round(p.puntos / maxPts * 100);
+    return `
+      <div class="rank-row ${i === 0 ? 'lider' : ''}" style="${esYo ? 'border-color:'+color+';background:#f8f8ff' : ''}">
+        <span class="rank-pos">${medals[i] || (i+1)}</span>
+        <div class="rank-info">
+          <div class="rank-nombre" style="color:${color}">${esYo ? '⭐ ' : ''}${p.nombre}</div>
+          <div class="rank-equipo">Equipo ${p.equipo} · 🟢${p.fichas.verde} 🟡${p.fichas.amarillo} 🔴${p.fichas.rojo}</div>
+        </div>
+        <div class="rank-bar-wrap">
+          <div class="rank-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <span class="rank-pts">${p.puntos}</span>
+      </div>
+    `;
+  }).join('');
+
+  if (!sorted.length) {
+    wrap.innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">No hay jugadores aún.</p>';
+  }
+}
+
+// ── Socket eventos ────────────────────────────────────────
+socket.on('joined', ({ code, myId: id, state: s }) => {
+  entrarAlJuego(code, id);
+  render(s);
+  showToast(`Sala ${code} · ¡Listo para jugar!`, 'success');
+});
+
+socket.on('state', (s) => {
+  render(s);
+});
+
+socket.on('toast', ({ msg, tipo }) => {
+  showToast(msg, tipo);
+});
+
+socket.on('err', (msg) => {
+  showLobbyError(msg);
+  showToast(msg, 'error');
+});
+
+socket.on('round-changed', ({ round }) => {
+  ronda = round;
+});
+
+// ── Enter key en lobby ────────────────────────────────────
+document.getElementById('f-code').addEventListener('keydown', e => {
+  if (e.key === 'Enter') unirse();
+});
+document.getElementById('f-nombre').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('f-equipo').focus();
+});
+
+// Fix: cerrar modal al click en overlay
+document.getElementById('modal-wrap').addEventListener('click', function(e) {
+  if (e.target === this) cerrarModal();
+});
+</script>
+</body>
+</html>
