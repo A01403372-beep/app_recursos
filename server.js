@@ -47,10 +47,11 @@ function snapshot(room) {
     };
   });
   return {
-    code:   room.code,
-    ronda:  room.ronda,
+    code:        room.code,
+    ronda:       room.ronda,
     players,
-    banco:  { ...room.banco }
+    banco:       { ...room.banco },
+    facilitador: room.facilitador
   };
 }
 
@@ -90,6 +91,7 @@ io.on('connection', (socket) => {
       ronda: 1,
       players: new Map([[socket.id, nuevoJugador(nombre, equipo)]]),
       banco: { ...BANCO_INICIO },
+      facilitador: socket.id,
       creadaEn: Date.now()
     };
     rooms.set(code, room);
