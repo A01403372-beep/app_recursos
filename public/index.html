@@ -817,35 +817,70 @@ function renderTorres(s) {
 // ── Render Ranking ────────────────────────────────────────
 function renderRanking(s) {
   const wrap = document.getElementById('ranking-container');
+  const medals = ['🥇','🥈','🥉'];
+
+  // ── Ranking por equipos ──
+  const equipoTotales = {};
+  const eqNames = ['Alfa','Beta','Gamma','Delta','Epsilon'];
+  eqNames.forEach(eq => { equipoTotales[eq] = 0; });
+  Object.values(s.players).forEach(p => {
+    if (equipoTotales[p.equipo] !== undefined) equipoTotales[p.equipo] += p.puntos;
+  });
+  const equiposSorted = eqNames
+    .filter(eq => Object.values(s.players).some(p => p.equipo === eq))
+    .sort((a, b) => equipoTotales[b] - equipoTotales[a]);
+  const maxEq = Math.max(...equiposSorted.map(eq => equipoTotales[eq]), 1);
+
+  const equiposHTML = equiposSorted.length ? `
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🏆 Por equipo</div>
+    ${equiposSorted.map((eq, i) => {
+      const color = EQUIPO_COLOR[eq] || '#888';
+      const pts = equipoTotales[eq];
+      const pct = Math.round(pts / maxEq * 100);
+      const miEquipo = s.players[myId] && s.players[myId].equipo === eq;
+      return `
+        <div class="rank-row ${i === 0 ? 'lider' : ''}" style="${miEquipo ? 'border-color:'+color+';background:#f8f8ff' : ''}">
+          <span class="rank-pos">${medals[i] || (i+1)}</span>
+          <div class="rank-info">
+            <div class="rank-nombre" style="color:${color}">${miEquipo ? '⭐ ' : ''}Equipo ${eq}</div>
+            <div class="rank-equipo">${Object.values(s.players).filter(p=>p.equipo===eq).length} jugadores</div>
+          </div>
+          <div class="rank-bar-wrap">
+            <div class="rank-bar" style="width:${pct}%;background:${color}"></div>
+          </div>
+          <span class="rank-pts">${pts}</span>
+        </div>`;
+    }).join('')}
+  ` : '';
+
+  // ── Ranking individual ──
   const sorted = Object.entries(s.players)
     .map(([id, p]) => ({ id, ...p }))
     .sort((a, b) => b.puntos - a.puntos);
-
   const maxPts = Math.max(...sorted.map(p => p.puntos), 1);
-  const medals = ['🥇','🥈','🥉'];
 
-  wrap.innerHTML = sorted.map((p, i) => {
-    const esYo = p.id === myId;
-    const color = EQUIPO_COLOR[p.equipo] || '#888';
-    const pct = Math.round(p.puntos / maxPts * 100);
-    return `
-      <div class="rank-row ${i === 0 ? 'lider' : ''}" style="${esYo ? 'border-color:'+color+';background:#f8f8ff' : ''}">
-        <span class="rank-pos">${medals[i] || (i+1)}</span>
-        <div class="rank-info">
-          <div class="rank-nombre" style="color:${color}">${esYo ? '⭐ ' : ''}${p.nombre}</div>
-          <div class="rank-equipo">Equipo ${p.equipo} · 🟢${p.fichas.verde} 🟡${p.fichas.amarillo} 🔴${p.fichas.rojo}</div>
-        </div>
-        <div class="rank-bar-wrap">
-          <div class="rank-bar" style="width:${pct}%;background:${color}"></div>
-        </div>
-        <span class="rank-pts">${p.puntos}</span>
-      </div>
-    `;
-  }).join('');
+  const individualHTML = sorted.length ? `
+    <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px">👤 Individual</div>
+    ${sorted.map((p, i) => {
+      const esYo = p.id === myId;
+      const color = EQUIPO_COLOR[p.equipo] || '#888';
+      const pct = Math.round(p.puntos / maxPts * 100);
+      return `
+        <div class="rank-row ${i === 0 ? 'lider' : ''}" style="${esYo ? 'border-color:'+color+';background:#f8f8ff' : ''}">
+          <span class="rank-pos">${medals[i] || (i+1)}</span>
+          <div class="rank-info">
+            <div class="rank-nombre" style="color:${color}">${esYo ? '⭐ ' : ''}${p.nombre}</div>
+            <div class="rank-equipo">Equipo ${p.equipo} · 🟢${p.fichas.verde} 🟡${p.fichas.amarillo} 🔴${p.fichas.rojo}</div>
+          </div>
+          <div class="rank-bar-wrap">
+            <div class="rank-bar" style="width:${pct}%;background:${color}"></div>
+          </div>
+          <span class="rank-pts">${p.puntos}</span>
+        </div>`;
+    }).join('')}
+  ` : '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">No hay jugadores aún.</p>';
 
-  if (!sorted.length) {
-    wrap.innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">No hay jugadores aún.</p>';
-  }
+  wrap.innerHTML = equiposHTML + individualHTML;
 }
 
 // ── Socket eventos ────────────────────────────────────────
