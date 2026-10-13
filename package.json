@@ -1,6 +1,6 @@
 {
   "name": "reto-de-los-recursos",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Juego multijugador de sostenibilidad de seis rondas con acceso por QR",
   "main": "server.js",
   "scripts": {
