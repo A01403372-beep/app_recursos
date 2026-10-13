@@ -2,3555 +2,473 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>🌱 Reto de los Recursos</title>
-
 <style>
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --verde: #16a34a;
-  --verde-l: #dcfce7;
-  --verde-d: #166534;
-  --verde-dot: #22c55e;
-  --am: #d97706;
-  --am-l: #fef3c7;
-  --am-d: #92400e;
-  --am-dot: #f59e0b;
-  --rojo: #dc2626;
-  --rojo-l: #fee2e2;
-  --rojo-d: #991b1b;
-  --rojo-dot: #ef4444;
-  --bg: #f0fdf4;
-  --card: #ffffff;
-  --border: #e2e8f0;
-  --text: #0f172a;
-  --muted: #64748b;
-  --radius: 14px;
-  --header-h: 58px;
-  --tab-h: 50px;
-}
-
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    system-ui,
-    sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Lobby ───────────────────────────────────────────── */
-#lobby {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  overflow-y: auto;
-}
-
-.lobby-wrap {
-  width: 100%;
-  max-width: 380px;
-  padding: 2rem 1.75rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-.lobby-logo {
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.lobby-logo .icon {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 2.8rem;
-}
-
-.lobby-logo h1 {
-  color: var(--verde-d);
-  font-size: 1.35rem;
-  font-weight: 700;
-}
-
-.lobby-logo p {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.field {
-  margin-bottom: 12px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.field input {
-  width: 100%;
-  padding: 11px 14px;
-  color: var(--text);
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  outline: none;
-  font-size: 1rem;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-
-.field input:focus {
-  border-color: var(--verde);
-}
-
-.field input[id="f-code"] {
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.btn {
-  width: 100%;
-  padding: 13px;
-  border: none;
-  border-radius: 11px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.btn-primary {
-  color: #ffffff;
-  background: var(--verde);
-}
-
-.btn-primary:hover {
-  background: var(--verde-d);
-}
-
-.btn-primary:active {
-  transform: scale(0.97);
-}
-
-.btn-secondary {
-  color: var(--verde);
-  background: transparent;
-  border: 1.5px solid var(--verde);
-}
-
-.btn-secondary:hover {
-  background: var(--verde-l);
-}
-
-.lobby-error {
-  display: none;
-  margin-top: 12px;
-  padding: 10px 14px;
-  color: var(--rojo-d);
-  background: var(--rojo-l);
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-.lobby-step {
-  animation: lobbyIn 0.28s ease both;
-}
-
-.lobby-step.hidden {
-  display: none;
-}
-
-.lobby-intro {
-  margin-bottom: 1.25rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.entry-options {
-  display: grid;
-  gap: 12px;
-}
-
-.entry-btn {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 14px;
-  padding: 16px;
-  color: var(--text);
-  background: #ffffff;
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    transform 0.18s,
-    border-color 0.18s,
-    box-shadow 0.18s;
-}
-
-.entry-btn:hover {
-  border-color: var(--verde);
-  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.1);
-  transform: translateY(-2px);
-}
-
-.entry-btn:active {
-  transform: scale(0.98);
-}
-
-.entry-btn .entry-icon {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  place-items: center;
-  border-radius: 12px;
-  font-size: 1.35rem;
-}
-
-.entry-btn.create .entry-icon {
-  background: var(--verde-l);
-}
-
-.entry-btn.join .entry-icon {
-  background: #eff6ff;
-}
-
-.entry-copy {
-  flex: 1;
-}
-
-.entry-copy strong {
-  display: block;
-  margin-bottom: 3px;
-  font-size: 0.96rem;
-}
-
-.entry-copy span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.35;
-}
-
-.entry-arrow {
-  color: var(--muted);
-  font-size: 1.2rem;
-}
-
-.lobby-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 0 12px;
-  color: var(--muted);
-  background: none;
-  border: 0;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.form-heading {
-  margin-bottom: 1rem;
-}
-
-.form-heading h2 {
-  color: var(--text);
-  font-size: 1.05rem;
-}
-
-.form-heading p {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.team-label {
-  display: block;
-  margin-bottom: 7px;
-  color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.team-choice {
-  --team-color: var(--verde);
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px;
-  color: var(--text);
-  background: #ffffff;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-size: 0.84rem;
-  font-weight: 650;
-  cursor: pointer;
-  transition: all 0.16s;
-}
-
-.team-choice:hover {
-  background: #f8fafc;
-  border-color: var(--team-color);
-}
-
-.team-choice.selected {
-  background: #f8fafc;
-  border-color: var(--team-color);
-  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
-}
-
-.team-choice.selected::after {
-  margin-left: auto;
-  color: var(--team-color);
-  font-weight: 800;
-  content: "✓";
-}
-
-.team-choice .team-dot {
-  width: 11px;
-  height: 11px;
-  background: var(--team-color);
-  border-radius: 50%;
-}
-
-.team-choice:last-child {
-  grid-column: 1 / -1;
-}
-
-@keyframes lobbyIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Juego ───────────────────────────────────────────── */
-#game {
-  display: none;
-  height: 100%;
-  flex-direction: column;
-}
-
-/* Encabezado */
-.game-header {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  height: var(--header-h);
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0 1rem;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-}
-
-.gh-left {
-  display: flex;
-  flex-direction: column;
-}
-
-.gh-code {
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.gh-name {
-  color: var(--text);
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-.gh-team {
-  color: var(--muted);
-  font-size: 0.7rem;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.audio-toggle {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  background: #f1f5f9;
-  border: 0;
-  border-radius: 50%;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
-.audio-toggle:hover {
-  background: var(--verde-l);
-}
-
-.ronda-badge {
-  padding: 6px 14px;
-  color: #ffffff;
-  background: var(--verde);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-/* Banner de ronda */
-.ronda-banner {
-  flex-shrink: 0;
-  padding: 0.6rem 1rem;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.82rem;
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: center;
-}
-
-.ronda-banner.r1 {
-  color: #1d4ed8;
-  background: #eff6ff;
-}
-
-.ronda-banner.r2 {
-  color: var(--verde-d);
-  background: var(--verde-l);
-}
-
-.ronda-banner.r3 {
-  color: #7e22ce;
-  background: #fdf4ff;
-}
-
-/* Pestañas */
-.tab-bar {
-  display: flex;
-  flex-shrink: 0;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-}
-
-.tab-btn {
-  display: flex;
-  height: var(--tab-h);
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 0;
-  color: var(--muted);
-  background: none;
-  border: none;
-  border-bottom: 3px solid transparent;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.tab-btn.active {
-  color: var(--verde);
-  border-bottom-color: var(--verde);
-}
-
-.tab-pane {
-  display: none;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.tab-pane.active {
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Mis fichas ──────────────────────────────────────── */
-.mf-scroll {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.mi-torre-card {
-  padding: 1rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.torre-card-title {
-  margin-bottom: 0.75rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.mi-torre-dots {
-  display: flex;
-  min-height: 40px;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.dot {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  transition: transform 0.15s;
-}
-
-.dot:active {
-  transform: scale(0.85);
-}
-
-.dot.verde {
-  background: var(--verde-dot);
-}
-
-.dot.amarillo {
-  background: var(--am-dot);
-}
-
-.dot.rojo {
-  background: var(--rojo-dot);
-}
-
-.dot.vacio {
-  background: var(--border);
-  opacity: 0.4;
-}
-
-/* Estadísticas */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.stat-card {
-  padding: 0.6rem 0.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  text-align: center;
-}
-
-.stat-num {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 800;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 0.68rem;
-}
-
-.stat-card.verde-c .stat-num {
-  color: var(--verde);
-}
-
-.stat-card.amarillo-c .stat-num {
-  color: var(--am);
-}
-
-.stat-card.rojo-c .stat-num {
-  color: var(--rojo);
-}
-
-.stat-card.puntos-c .stat-num {
-  color: #7c3aed;
-}
-
-/* Acciones */
-.acciones-card {
-  padding: 1rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.acciones-title {
-  margin-bottom: 0.75rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.accion-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.accion-row:last-child {
-  border-bottom: none;
-}
-
-.accion-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.accion-nombre {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.accion-desc {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-.accion-btns {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.ficha-btn {
-  display: flex;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 9px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.ficha-btn:active {
-  transform: scale(0.88);
-}
-
-.ficha-btn.usar-v {
-  color: var(--verde-d);
-  background: var(--verde-l);
-}
-
-.ficha-btn.usar-a {
-  color: var(--am-d);
-  background: var(--am-l);
-}
-
-.ficha-btn.dev-v,
-.ficha-btn.dev-a {
-  color: var(--muted);
-  background: #f1f5f9;
-  font-size: 0.9rem;
-}
-
-.ficha-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.35;
-}
-
-/* Banco */
-.banco-card {
-  padding: 1rem;
-  background: #fdf4ff;
-  border: 1.5px solid #d8b4fe;
-  border-radius: var(--radius);
-}
-
-.banco-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 0.75rem;
-  color: #7e22ce;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.banco-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.banco-item {
-  padding: 0.7rem;
-  background: #ffffff;
-  border: 1px solid #e9d5ff;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.banco-count {
-  display: block;
-  font-size: 1.6rem;
-  font-weight: 800;
-}
-
-.banco-count.verde {
-  color: var(--verde);
-}
-
-.banco-count.amarillo {
-  color: var(--am);
-}
-
-.banco-label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--muted);
-  font-size: 0.72rem;
-}
-
-.banco-btn {
-  width: 100%;
-  padding: 8px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.banco-btn.verde {
-  color: var(--verde-d);
-  background: var(--verde-l);
-}
-
-.banco-btn.amarillo {
-  color: var(--am-d);
-  background: var(--am-l);
-}
-
-.banco-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.35;
-}
-
-/* Facilitador */
-.facilitador-card {
-  padding: 1rem;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: var(--radius);
-}
-
-.facilitador-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 0.75rem;
-  color: #92400e;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.fac-btns {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.fac-btn {
-  width: 100%;
-  padding: 11px;
-  border: none;
-  border-radius: 9px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.fac-btn:active {
-  transform: scale(0.97);
-}
-
-.fac-btn.avanzar {
-  color: #ffffff;
-  background: var(--verde);
-}
-
-.fac-btn.avanzar:hover {
-  background: var(--verde-d);
-}
-
-.fac-btn.avanzar:disabled {
-  color: var(--muted);
-  background: var(--border);
-  cursor: not-allowed;
-  transform: none;
-}
-
-.fac-btn.regen {
-  color: var(--verde-d);
-  background: #dcfce7;
-}
-
-.fac-btn.reiniciar {
-  color: var(--muted);
-  background: #f1f5f9;
-}
-
-/* ── Torres ──────────────────────────────────────────── */
-.torres-scroll {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1rem;
-}
-
-.equipo-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 0.6rem;
-}
-
-.equipo-dot {
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.equipo-nombre {
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.equipo-pts {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
-.equipo-players {
-  display: flex;
-  gap: 8px;
-  padding-bottom: 4px;
-  overflow-x: auto;
-}
-
-.equipo-players::-webkit-scrollbar {
-  display: none;
-}
-
-.jugador-torre {
-  min-width: 76px;
-  flex-shrink: 0;
-  padding: 0.6rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  text-align: center;
-}
-
-.jugador-torre.es-yo {
-  background: var(--verde-l);
-  border-color: var(--verde);
-}
-
-.jt-dots {
-  display: flex;
-  width: 68px;
-  min-height: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 3px;
-  margin-bottom: 5px;
-}
-
-.jt-dot {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.jt-dot.verde {
-  background: var(--verde-dot);
-}
-
-.jt-dot.amarillo {
-  background: var(--am-dot);
-}
-
-.jt-dot.rojo {
-  background: var(--rojo-dot);
-}
-
-.jt-nombre {
-  max-width: 68px;
-  overflow: hidden;
-  color: var(--text);
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.jt-puntos {
-  color: #7c3aed;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-/* ── Ranking ─────────────────────────────────────────── */
-.ranking-scroll {
-  padding: 1rem;
-}
-
-.rank-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  padding: 0.75rem 1rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: border-color 0.2s;
-}
-
-.rank-row.lider {
-  border-color: var(--am-dot);
-}
-
-.rank-pos {
-  min-width: 28px;
-  font-size: 1.1rem;
-  text-align: center;
-}
-
-.rank-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.rank-nombre {
-  overflow: hidden;
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.rank-equipo {
-  color: var(--muted);
-  font-size: 0.72rem;
-}
-
-.rank-bar-wrap {
-  height: 6px;
-  flex: 1.5;
-  overflow: hidden;
-  background: var(--border);
-  border-radius: 100px;
-}
-
-.rank-bar {
-  height: 100%;
-  background: #7c3aed;
-  border-radius: 100px;
-  transition: width 0.5s ease;
-}
-
-.rank-pts {
-  min-width: 42px;
-  color: #7c3aed;
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-align: right;
-}
-
-.winner-summary {
-  margin-bottom: 14px;
-  padding: 1rem;
-  background:
-    linear-gradient(
-      135deg,
-      #fffbeb,
-      #fef3c7
-    );
-  border: 1.5px solid #f59e0b;
-  border-radius: 14px;
-  text-align: center;
-}
-
-.winner-summary .crown {
-  font-size: 1.8rem;
-}
-
-.winner-summary h3 {
-  margin: 3px 0;
-  color: #92400e;
-  font-size: 1rem;
-}
-
-.winner-summary p {
-  color: #a16207;
-  font-size: 0.78rem;
-}
-
-/* ── Toasts ──────────────────────────────────────────── */
-#toast-wrap {
-  position: fixed;
-  z-index: 1000;
-  top: 12px;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 6px;
-  pointer-events: none;
-  transform: translateX(-50%);
-}
-
-.toast-item {
-  max-width: 90vw;
-  padding: 9px 18px;
-  color: #f8fafc;
-  background: #1e293b;
-  border-radius: 100px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  white-space: nowrap;
-  animation: toastIn 0.25s ease forwards;
-}
-
-.toast-item.success {
-  background: var(--verde-d);
-}
-
-.toast-item.error {
-  background: var(--rojo-d);
-}
-
-.toast-item.round {
-  background: #7c3aed;
-}
-
-.toast-item.join {
-  background: #0369a1;
-}
-
-@keyframes toastIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Colores de equipos ──────────────────────────────── */
-.team-alfa {
-  background: #6366f1;
-}
-
-.team-beta {
-  background: #ec4899;
-}
-
-.team-gamma {
-  background: #f59e0b;
-}
-
-.team-delta {
-  background: #10b981;
-}
-
-.team-epsilon {
-  background: #3b82f6;
-}
-
-/* ── Resultado final ─────────────────────────────────── */
-#winner-wrap {
-  position: fixed;
-  z-index: 1500;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(5px);
-}
-
-.winner-card {
-  width: 100%;
-  max-width: 390px;
-  max-height: 90vh;
-  padding: 1.6rem;
-  overflow-y: auto;
-  background: #ffffff;
-  border-radius: 22px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
-  text-align: center;
-  animation:
-    winnerIn
-    0.45s
-    cubic-bezier(0.2, 0.9, 0.25, 1.2)
-    both;
-}
-
-.winner-trophy {
-  font-size: 3.5rem;
-  filter:
-    drop-shadow(
-      0 8px 8px rgba(245, 158, 11, 0.28)
-    );
-}
-
-.winner-kicker {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.winner-title {
-  margin: 5px 0 2px;
-  color: #92400e;
-  font-size: 1.45rem;
-}
-
-.winner-score {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.final-list {
-  display: grid;
-  gap: 7px;
-  margin: 1rem 0;
-  text-align: left;
-}
-
-.final-row {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 11px;
-  background: #f8fafc;
-  border-radius: 9px;
-}
-
-.final-row.winner {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-}
-
-.final-pos {
-  width: 24px;
-  text-align: center;
-}
-
-.final-team {
-  flex: 1;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.final-points {
-  color: #7c3aed;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.winner-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.winner-actions .btn {
-  padding: 11px;
-}
-
-@keyframes winnerIn {
-  from {
-    opacity: 0;
-    transform:
-      scale(0.82)
-      translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform:
-      scale(1)
-      translateY(0);
-  }
-}
-
-/* Utilidades */
-.hidden {
-  display: none !important;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --verde:#16a34a;--verde-l:#dcfce7;--verde-d:#166534;--verde-dot:#22c55e;
+  --am:#d97706;--am-l:#fef3c7;--am-d:#92400e;--am-dot:#f59e0b;
+  --rojo:#dc2626;--rojo-l:#fee2e2;--rojo-d:#991b1b;--rojo-dot:#ef4444;
+  --azul:#0369a1;--azul-l:#e0f2fe;--morado:#7c3aed;--morado-l:#f3e8ff;
+  --bg:#f0fdf4;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;
+  --radius:14px;--header-h:62px;--tab-h:50px
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+button,input{font:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);outline-offset:2px}
+.hidden{display:none!important}
+
+/* Acceso */
+#lobby{flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto;background:radial-gradient(circle at top,#dcfce7 0,#f0fdf4 42%,#f8fafc 100%)}
+.lobby-wrap{width:100%;max-width:400px;padding:2rem 1.75rem;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:22px;box-shadow:0 18px 48px rgba(15,23,42,.09)}
+.lobby-logo{text-align:center;margin-bottom:1.5rem}.lobby-logo .icon{display:block;font-size:2.9rem;margin-bottom:.45rem}.lobby-logo h1{font-size:1.4rem;color:var(--verde-d)}.lobby-logo p{font-size:.84rem;color:var(--muted);margin-top:4px}
+.lobby-step{animation:fadeUp .25s ease both}.lobby-intro{text-align:center;color:var(--muted);font-size:.9rem;line-height:1.5;margin-bottom:1.15rem}
+.entry-options{display:grid;gap:12px}.entry-btn{width:100%;display:flex;align-items:center;gap:13px;padding:16px;background:#fff;color:var(--text);border:1.5px solid var(--border);border-radius:14px;text-align:left;cursor:pointer;transition:.18s}
+.entry-btn:hover{border-color:var(--verde);transform:translateY(-2px);box-shadow:0 8px 20px rgba(22,163,74,.1)}.entry-btn:active{transform:scale(.98)}
+.entry-icon{width:44px;height:44px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;font-size:1.35rem}.entry-btn.create .entry-icon{background:var(--verde-l)}.entry-btn.join .entry-icon{background:var(--azul-l)}
+.entry-copy{flex:1}.entry-copy strong{display:block;font-size:.96rem;margin-bottom:3px}.entry-copy span{display:block;color:var(--muted);font-size:.76rem;line-height:1.35}.entry-arrow{font-size:1.25rem;color:var(--muted)}
+.lobby-back{display:inline-flex;align-items:center;gap:5px;padding:0 0 12px;border:0;background:none;color:var(--muted);font-size:.8rem;cursor:pointer}.form-heading{margin-bottom:1rem}.form-heading h2{font-size:1.08rem}.form-heading p{font-size:.8rem;color:var(--muted);margin-top:3px}
+.field{margin-bottom:12px}.field label,.team-label{display:block;margin-bottom:6px;color:var(--muted);font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.field input{width:100%;padding:11px 14px;background:#f8fafc;color:var(--text);border:1.5px solid var(--border);border-radius:10px;outline:none;font-size:1rem}.field input:focus{border-color:var(--verde)}#f-code{text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}.team-choice{--team-color:var(--verde);display:flex;align-items:center;gap:8px;padding:10px;background:#fff;color:var(--text);border:1.5px solid var(--border);border-radius:10px;font-size:.83rem;font-weight:700;cursor:pointer;transition:.16s}.team-choice:hover,.team-choice.selected{border-color:var(--team-color);background:#f8fafc}.team-choice.selected{box-shadow:0 0 0 2px rgba(15,23,42,.07)}.team-choice.selected::after{content:"✓";margin-left:auto;color:var(--team-color)}.team-choice:last-child{grid-column:1/-1}.team-dot{display:inline-block;width:11px;height:11px;flex-shrink:0;background:var(--team-color);border-radius:50%}
+.btn{width:100%;padding:12px;border:0;border-radius:10px;font-size:.92rem;font-weight:700;cursor:pointer;transition:.16s}.btn:active{transform:scale(.98)}.btn-primary{background:var(--verde);color:#fff}.btn-primary:hover{background:var(--verde-d)}.btn-secondary{background:#fff;color:var(--verde);border:1.5px solid var(--verde)}.lobby-error{display:none;margin-top:12px;padding:10px 13px;background:var(--rojo-l);color:var(--rojo-d);border-radius:9px;font-size:.82rem}
+
+/* Juego */
+#game{display:none;height:100%;flex-direction:column}.game-header{height:var(--header-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 1rem;background:#fff;border-bottom:1px solid var(--border);position:relative;z-index:10}.gh-left{display:flex;flex-direction:column;min-width:0}.gh-code{color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.12em}.gh-name{font-size:.92rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gh-team{font-size:.68rem;color:var(--muted)}.header-actions{display:flex;align-items:center;gap:8px}.audio-toggle{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:50%;background:#f1f5f9;cursor:pointer}.ronda-badge{padding:6px 12px;background:var(--verde);color:#fff;border-radius:100px;font-size:.72rem;font-weight:800;white-space:nowrap}
+.ronda-banner{flex-shrink:0;padding:.6rem 1rem;border-bottom:1px solid var(--border);text-align:center;font-size:.79rem;font-weight:600;line-height:1.35}.r1,.r4{background:#eff6ff;color:#1d4ed8}.r2,.r6{background:var(--verde-l);color:var(--verde-d)}.r3{background:var(--azul-l);color:#075985}.r5{background:var(--morado-l);color:#6b21a8}
+.tab-bar{display:flex;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border)}.tab-btn{height:var(--tab-h);flex:1;display:flex;align-items:center;justify-content:center;gap:4px;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);font-size:.8rem;font-weight:700;cursor:pointer}.tab-btn.active{color:var(--verde);border-bottom-color:var(--verde)}.tab-pane{display:none;flex:1;overflow-y:auto}.tab-pane.active{display:flex;flex-direction:column}.scroll{padding:1rem;display:flex;flex-direction:column;gap:1rem}
+.card{padding:1rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius)}.card-title{margin-bottom:.75rem;color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.tower-dots{display:flex;flex-wrap:wrap;gap:5px;min-height:31px}.dot{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 -2px 0 rgba(0,0,0,.1)}.dot.verde,.mini-dot.verde{background:var(--verde-dot)}.dot.amarillo,.mini-dot.amarillo{background:var(--am-dot)}.dot.rojo,.mini-dot.rojo{background:var(--rojo-dot)}.empty-tower{color:var(--muted);font-size:.78rem;padding:.3rem 0}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:.6rem .35rem;background:#fff;border:1px solid var(--border);border-radius:10px;text-align:center}.stat strong{display:block;font-size:1.25rem}.stat span{display:block;color:var(--muted);font-size:.65rem}.green strong{color:var(--verde)}.yellow strong{color:var(--am)}.red strong{color:var(--rojo)}.purple strong{color:var(--morado)}
+.action-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:.65rem 0;border-bottom:1px solid var(--border)}.action-row:last-child{border-bottom:0}.action-info{min-width:0}.action-info strong{display:block;font-size:.87rem}.action-info span{display:block;margin-top:2px;color:var(--muted);font-size:.72rem;line-height:1.3}.action-buttons{display:flex;gap:6px;flex-shrink:0}.icon-btn{width:37px;height:37px;display:grid;place-items:center;border:0;border-radius:9px;font-size:1rem;font-weight:800;cursor:pointer}.icon-btn:active{transform:scale(.9)}.icon-btn:disabled,.bank-btn:disabled,.fac-btn:disabled{opacity:.35;cursor:not-allowed}.use-green{background:var(--verde-l);color:var(--verde-d)}.use-yellow{background:var(--am-l);color:var(--am-d)}.undo{background:#f1f5f9;color:var(--muted)}
+.special-card{padding:1rem;border-radius:var(--radius)}.government{background:#f0f9ff;border:1.5px solid #7dd3fc}.crisis{background:#faf5ff;border:1.5px solid #d8b4fe}.special-title{display:flex;align-items:center;gap:6px;margin-bottom:.7rem;font-size:.82rem;font-weight:800}.government .special-title{color:#075985}.crisis .special-title{color:#6b21a8}.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bank-item{padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:10px;text-align:center}.bank-count{display:block;font-size:1.45rem;font-weight:900}.bank-label{display:block;color:var(--muted);font-size:.68rem;margin-bottom:7px}.bank-btn{width:100%;padding:8px;border:0;border-radius:8px;font-size:.77rem;font-weight:700;cursor:pointer}.bank-btn.green{background:var(--verde-l);color:var(--verde-d)}.bank-btn.yellow{background:var(--am-l);color:var(--am-d)}.exchange{margin-top:8px;background:#fff;border:1px solid #bae6fd;color:#0369a1}.special-note{margin-top:8px;color:var(--muted);font-size:.72rem;line-height:1.4}
+.facilitator{background:#fffbeb;border:1px solid #fde68a}.facilitator .card-title{color:#92400e}.fac-buttons{display:grid;gap:8px}.fac-btn{width:100%;padding:10px;border:0;border-radius:9px;font-size:.84rem;font-weight:700;cursor:pointer}.fac-primary{background:var(--verde);color:#fff}.fac-subsidy{background:#ede9fe;color:#5b21b6}.fac-regen{background:var(--verde-l);color:var(--verde-d)}.fac-reset{background:#f1f5f9;color:var(--muted)}
+.invite-card{background:#f8fafc;border:1px solid var(--border);text-align:center}.invite-card .card-title{margin-bottom:.55rem}.invite-copy{color:var(--muted);font-size:.75rem;line-height:1.4}.qr-box{width:196px;max-width:100%;margin:.75rem auto;padding:9px;background:#fff;border:1px solid var(--border);border-radius:13px}.qr-box img{display:block;width:100%;height:auto}.invite-code{font-size:1.3rem;font-weight:900;letter-spacing:.15em;color:var(--verde-d)}.invite-link{display:block;margin-top:5px;color:var(--azul);font-size:.68rem;overflow-wrap:anywhere}.prefilled-code{margin:-3px 0 12px;padding:8px 10px;background:var(--azul-l);color:#075985;border-radius:9px;font-size:.78rem;font-weight:700;text-align:center}
+
+/* Torres y ranking */
+.team-section{margin-bottom:.15rem}.team-header{display:flex;align-items:center;gap:8px;margin-bottom:.55rem}.team-header strong{font-size:.84rem}.team-header span:last-child{margin-left:auto;color:var(--muted);font-size:.74rem}.team-players{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}.player-tower{min-width:94px;padding:.6rem;background:#fff;border:1px solid var(--border);border-radius:10px;text-align:center}.player-tower.me{background:var(--verde-l);border-color:var(--verde)}.mini-dots{min-height:19px;display:flex;flex-wrap:wrap;justify-content:center;gap:3px;margin-bottom:5px}.mini-dot{width:15px;height:15px;border-radius:50%}.player-name{max-width:82px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.69rem;font-weight:700}.player-meta{color:var(--muted);font-size:.64rem}.player-points{color:var(--morado);font-size:.72rem;font-weight:800}
+.rank-heading{margin:2px 0 8px;color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.rank-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;padding:.7rem .8rem;background:#fff;border:1px solid var(--border);border-radius:10px}.rank-row.leader{border-color:var(--am-dot)}.rank-pos{width:26px;text-align:center}.rank-info{flex:1;min-width:0}.rank-name{font-size:.84rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-detail{color:var(--muted);font-size:.68rem}.rank-bar-wrap{width:18%;height:6px;overflow:hidden;background:var(--border);border-radius:99px}.rank-bar{height:100%;border-radius:99px}.rank-points{min-width:39px;text-align:right;color:var(--morado);font-size:.88rem;font-weight:900}.winner-summary{margin-bottom:14px;padding:1rem;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid var(--am-dot);border-radius:14px;text-align:center}.winner-summary div{font-size:1.7rem}.winner-summary h3{color:#92400e;font-size:.98rem}.winner-summary p{color:#a16207;font-size:.76rem}
+
+/* Toast, modal y ganador */
+#toast-wrap{position:fixed;z-index:2000;top:12px;left:50%;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;transform:translateX(-50%)}.toast{max-width:92vw;padding:9px 16px;background:#1e293b;color:#fff;border-radius:99px;font-size:.79rem;white-space:nowrap;animation:toastIn .22s ease}.toast.success{background:var(--verde-d)}.toast.error{background:var(--rojo-d)}.toast.round{background:var(--morado)}.toast.join{background:var(--azul)}
+.overlay{position:fixed;z-index:1500;inset:0;display:none;align-items:center;justify-content:center;padding:1.25rem;background:rgba(15,23,42,.65);backdrop-filter:blur(4px)}.modal{width:100%;max-width:335px;padding:1.6rem;background:#fff;border-radius:18px;text-align:center}.modal-icon{font-size:2.2rem}.modal h3{font-size:1.08rem;margin:.45rem 0}.modal p{color:var(--muted);font-size:.82rem;line-height:1.5;margin-bottom:1.1rem}.modal-actions{display:flex;gap:8px}.modal-actions button{flex:1}
+#winner-wrap{z-index:2500}.winner-card{width:100%;max-width:400px;max-height:90vh;overflow:auto;padding:1.6rem;background:#fff;border-radius:22px;text-align:center;animation:winnerIn .42s cubic-bezier(.2,.9,.25,1.2)}.winner-trophy{font-size:3.4rem}.winner-kicker{margin-top:4px;color:var(--muted);font-size:.69rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.winner-card h2{margin:5px 0 3px;color:#92400e;font-size:1.38rem}.winner-card>p{color:var(--muted);font-size:.84rem}.final-list{display:grid;gap:7px;margin:1rem 0;text-align:left}.final-row{display:flex;align-items:center;gap:8px;padding:9px 10px;background:#f8fafc;border-radius:9px}.final-row.winner{background:#fffbeb;border:1px solid #fde68a}.final-pos{width:24px;text-align:center}.final-team{flex:1;font-size:.83rem;font-weight:800}.final-data{text-align:right}.final-data strong{display:block;color:var(--morado);font-size:.82rem}.final-data span{display:block;color:var(--muted);font-size:.61rem}.winner-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}@keyframes toastIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}@keyframes winnerIn{from{opacity:0;transform:scale(.82) translateY(18px)}to{opacity:1;transform:none}}
+@media(max-width:360px){.stats-grid{grid-template-columns:repeat(2,1fr)}.tab-btn{font-size:.73rem}.lobby-wrap{padding:1.5rem 1.2rem}}
 </style>
 </head>
-
 <body>
 
-<!-- Pantalla de entrada -->
 <div id="lobby">
-  <div class="lobby-wrap">
-    <div class="lobby-logo">
+  <main class="lobby-wrap">
+    <header class="lobby-logo">
       <span class="icon">🌱</span>
       <h1>Reto de los Recursos</h1>
-      <p>Juego multijugador de sostenibilidad</p>
-    </div>
+      <p>Juego multijugador de sostenibilidad · 6 rondas</p>
+    </header>
 
-    <!-- Pantalla previa -->
-    <div id="lobby-home" class="lobby-step">
-      <p class="lobby-intro">
-        Elige cómo quieres comenzar la experiencia.
-      </p>
-
+    <section id="lobby-home" class="lobby-step">
+      <p class="lobby-intro">Elige cómo quieres comenzar la experiencia.</p>
       <div class="entry-options">
-        <button
-          class="entry-btn create"
-          type="button"
-          onclick="abrirFlujo('crear')"
-        >
+        <button class="entry-btn create" type="button" onclick="abrirFlujo('crear')">
           <span class="entry-icon">✨</span>
-
-          <span class="entry-copy">
-            <strong>Crear Sala Nueva</strong>
-            <span>
-              Inicia una partida y administra las rondas.
-            </span>
-          </span>
-
+          <span class="entry-copy"><strong>Crear Sala Nueva</strong><span>Inicia una partida y administra las seis rondas.</span></span>
           <span class="entry-arrow">›</span>
         </button>
-
-        <button
-          class="entry-btn join"
-          type="button"
-          onclick="abrirFlujo('unirse')"
-        >
+        <button class="entry-btn join" type="button" onclick="abrirFlujo('unirse')">
           <span class="entry-icon">🚪</span>
-
-          <span class="entry-copy">
-            <strong>Unirse a una Sala</strong>
-            <span>
-              Ingresa el código y elige tu equipo.
-            </span>
-          </span>
-
+          <span class="entry-copy"><strong>Unirse a una Sala</strong><span>Ingresa el código y escoge tu equipo.</span></span>
           <span class="entry-arrow">›</span>
         </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Formulario para crear o unirse -->
-    <div
-      id="lobby-form"
-      class="lobby-step hidden"
-    >
-      <button
-        class="lobby-back"
-        type="button"
-        onclick="volverInicio()"
-      >
-        ← Volver
-      </button>
-
+    <section id="lobby-form" class="lobby-step hidden">
+      <button class="lobby-back" type="button" onclick="volverInicio()">← Volver</button>
       <div class="form-heading">
-        <h2 id="form-title">
-          Crear Sala Nueva
-        </h2>
-
-        <p id="form-subtitle">
-          Configura tu perfil para comenzar.
-        </p>
+        <h2 id="form-title">Crear Sala Nueva</h2>
+        <p id="form-subtitle">Configura tu perfil para comenzar.</p>
       </div>
-
-      <div
-        id="code-field"
-        class="field hidden"
-      >
-        <label for="f-code">
-          Código de sala
-        </label>
-
-        <input
-          id="f-code"
-          type="text"
-          placeholder="XXXXX"
-          maxlength="5"
-          autocomplete="off"
-          inputmode="text"
-        >
+      <div id="code-field" class="field hidden">
+        <label for="f-code">Código de sala</label>
+        <input id="f-code" type="text" maxlength="5" placeholder="XXXXX" autocomplete="off">
       </div>
-
       <div class="field">
-        <label for="f-nombre">
-          Tu nombre
-        </label>
-
-        <input
-          id="f-nombre"
-          type="text"
-          placeholder="Ej. María García"
-          maxlength="20"
-          autocomplete="off"
-        >
+        <label for="f-nombre">Tu nombre</label>
+        <input id="f-nombre" type="text" maxlength="20" placeholder="Ej. María García" autocomplete="off">
       </div>
-
-      <span class="team-label">
-        Elige tu equipo
-      </span>
-
-      <div
-        class="team-grid"
-        id="team-grid"
-        role="group"
-        aria-label="Selección de equipo"
-      >
-        <button
-          class="team-choice"
-          style="--team-color: #6366f1"
-          type="button"
-          data-team="Alfa"
-          aria-pressed="false"
-          onclick="seleccionarEquipo(this)"
-        >
-          <span class="team-dot"></span>
-          Equipo Alfa
-        </button>
-
-        <button
-          class="team-choice"
-          style="--team-color: #ec4899"
-          type="button"
-          data-team="Beta"
-          aria-pressed="false"
-          onclick="seleccionarEquipo(this)"
-        >
-          <span class="team-dot"></span>
-          Equipo Beta
-        </button>
-
-        <button
-          class="team-choice"
-          style="--team-color: #f59e0b"
-          type="button"
-          data-team="Gamma"
-          aria-pressed="false"
-          onclick="seleccionarEquipo(this)"
-        >
-          <span class="team-dot"></span>
-          Equipo Gamma
-        </button>
-
-        <button
-          class="team-choice"
-          style="--team-color: #10b981"
-          type="button"
-          data-team="Delta"
-          aria-pressed="false"
-          onclick="seleccionarEquipo(this)"
-        >
-          <span class="team-dot"></span>
-          Equipo Delta
-        </button>
-
-        <button
-          class="team-choice"
-          style="--team-color: #3b82f6"
-          type="button"
-          data-team="Epsilon"
-          aria-pressed="false"
-          onclick="seleccionarEquipo(this)"
-        >
-          <span class="team-dot"></span>
-          Equipo Épsilon
-        </button>
+      <div id="team-selector">
+      <span class="team-label">Elige tu equipo</span>
+      <div class="team-grid" role="group" aria-label="Selección de equipo">
+        <button class="team-choice" style="--team-color:#6366f1" type="button" data-team="Alfa" aria-pressed="false" onclick="seleccionarEquipo(this)"><span class="team-dot"></span>Equipo Alfa</button>
+        <button class="team-choice" style="--team-color:#ec4899" type="button" data-team="Beta" aria-pressed="false" onclick="seleccionarEquipo(this)"><span class="team-dot"></span>Equipo Beta</button>
+        <button class="team-choice" style="--team-color:#f59e0b" type="button" data-team="Gamma" aria-pressed="false" onclick="seleccionarEquipo(this)"><span class="team-dot"></span>Equipo Gamma</button>
+        <button class="team-choice" style="--team-color:#10b981" type="button" data-team="Delta" aria-pressed="false" onclick="seleccionarEquipo(this)"><span class="team-dot"></span>Equipo Delta</button>
+        <button class="team-choice" style="--team-color:#3b82f6" type="button" data-team="Epsilon" aria-pressed="false" onclick="seleccionarEquipo(this)"><span class="team-dot"></span>Equipo Épsilon</button>
       </div>
-
-      <button
-        id="lobby-submit"
-        class="btn btn-primary"
-        type="button"
-        onclick="enviarLobby()"
-      >
-        ✨ Crear Sala Nueva
-      </button>
-
-      <div
-        class="lobby-error"
-        id="lobby-error"
-        role="alert"
-      ></div>
-    </div>
-  </div>
+      </div>
+      <div id="prefilled-code" class="prefilled-code hidden"></div>
+      <button id="lobby-submit" class="btn btn-primary" type="button" onclick="enviarLobby()">✨ Crear Sala Nueva</button>
+      <div id="lobby-error" class="lobby-error" role="alert"></div>
+    </section>
+  </main>
 </div>
 
-<!-- Juego -->
 <div id="game">
-
-  <!-- Encabezado -->
-  <div class="game-header">
+  <header class="game-header">
     <div class="gh-left">
-      <span
-        class="gh-code"
-        id="gh-code"
-      >
-        SALA ·····
-      </span>
-
-      <span
-        class="gh-name"
-        id="gh-name"
-      >
-        —
-      </span>
-
-      <span
-        class="gh-team"
-        id="gh-team"
-      >
-        —
-      </span>
+      <span id="gh-code" class="gh-code">SALA ·····</span>
+      <span id="gh-name" class="gh-name">—</span>
+      <span id="gh-team" class="gh-team">—</span>
     </div>
-
     <div class="header-actions">
-      <button
-        class="audio-toggle"
-        id="audio-toggle"
-        type="button"
-        onclick="toggleSound()"
-        title="Activar o desactivar sonidos"
-        aria-label="Desactivar sonidos"
-      >
-        🔊
-      </button>
-
-      <span
-        class="ronda-badge"
-        id="ronda-badge"
-      >
-        Ronda 1
-      </span>
+      <button id="audio-toggle" class="audio-toggle" type="button" onclick="toggleSound()" title="Desactivar sonidos" aria-label="Desactivar sonidos">🔊</button>
+      <span id="ronda-badge" class="ronda-badge">Ronda 1/6</span>
     </div>
-  </div>
+  </header>
 
-  <!-- Banner de ronda -->
-  <div
-    class="ronda-banner r1"
-    id="ronda-banner"
-  >
-    🔓 Ronda 1 — Uso libre · Usa todas las fichas que quieras
-  </div>
+  <div id="ronda-banner" class="ronda-banner r1">🔓 Ronda 1 — Uso libre · Usa lo que quieras</div>
 
-  <!-- Pestañas -->
-  <div class="tab-bar">
-    <button
-      class="tab-btn active"
-      onclick="showTab('fichas', this)"
-    >
-      🧩 Mis Fichas
-    </button>
+  <nav class="tab-bar" aria-label="Secciones del juego">
+    <button class="tab-btn active" onclick="showTab('fichas',this)">🧩 Mis Fichas</button>
+    <button class="tab-btn" onclick="showTab('torres',this)">🏰 Torres</button>
+    <button class="tab-btn" onclick="showTab('ranking',this)">🏆 Ranking</button>
+  </nav>
 
-    <button
-      class="tab-btn"
-      onclick="showTab('torres', this)"
-    >
-      🏰 Torres
-    </button>
-
-    <button
-      class="tab-btn"
-      onclick="showTab('ranking', this)"
-    >
-      🏆 Ranking
-    </button>
-  </div>
-
-  <!-- Pestaña: Mis fichas -->
-  <div
-    id="tab-fichas"
-    class="tab-pane active"
-  >
-    <div class="mf-scroll">
-
-      <div class="mi-torre-card">
-        <div class="torre-card-title">
-          Mi torre de fichas
-        </div>
-
-        <div
-          class="mi-torre-dots"
-          id="mi-torre-dots"
-        ></div>
+  <section id="tab-fichas" class="tab-pane active">
+    <div class="scroll">
+      <div id="invite-card" class="card invite-card" style="display:none">
+        <div class="card-title">📱 Acceso de participantes</div>
+        <p class="invite-copy">Pide a los participantes que escaneen el QR. El código de sala se abrirá precargado.</p>
+        <div class="qr-box"><img id="room-qr" alt="QR para entrar a la sala"></div>
+        <div id="invite-code" class="invite-code">·····</div>
+        <a id="invite-link" class="invite-link" href="#" target="_blank" rel="noopener"></a>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-card verde-c">
-          <span
-            class="stat-num"
-            id="s-verde"
-          >
-            8
-          </span>
-
-          <span class="stat-label">
-            🟢 Verdes
-          </span>
-        </div>
-
-        <div class="stat-card amarillo-c">
-          <span
-            class="stat-num"
-            id="s-amarillo"
-          >
-            5
-          </span>
-
-          <span class="stat-label">
-            🟡 Amarillas
-          </span>
-        </div>
-
-        <div class="stat-card rojo-c">
-          <span
-            class="stat-num"
-            id="s-rojo"
-          >
-            0
-          </span>
-
-          <span class="stat-label">
-            🔴 Residuos
-          </span>
-        </div>
-
-        <div class="stat-card puntos-c">
-          <span
-            class="stat-num"
-            id="s-puntos"
-          >
-            0
-          </span>
-
-          <span class="stat-label">
-            ✨ Puntos
-          </span>
-        </div>
+      <div id="player-tower-card" class="card">
+        <div class="card-title">Mi torre · fichas usadas</div>
+        <div id="mi-torre-dots" class="tower-dots"></div>
       </div>
 
-      <div class="acciones-card">
-        <div class="acciones-title">
-          Usar fichas
-        </div>
+      <div id="player-stats" class="stats-grid">
+        <div class="stat green"><strong id="s-verde">8</strong><span>🟢 Disponibles</span></div>
+        <div class="stat yellow"><strong id="s-amarillo">5</strong><span>🟡 Disponibles</span></div>
+        <div class="stat red"><strong id="s-rojo">0</strong><span>🔴 Residuos</span></div>
+        <div class="stat green"><strong id="s-usada-v">0</strong><span>🟢 Usadas</span></div>
+        <div class="stat yellow"><strong id="s-usada-a">0</strong><span>🟡 Usadas</span></div>
+        <div class="stat purple"><strong id="s-puntos">0</strong><span>✨ Puntos</span></div>
+      </div>
 
-        <div class="accion-row">
-          <div class="accion-info">
-            <span class="accion-nombre">
-              🟢 Ficha Verde
-            </span>
-
-            <span class="accion-desc">
-              Recurso renovable · +1 punto · sin residuo
-            </span>
-          </div>
-
-          <div class="accion-btns">
-            <button
-              class="ficha-btn dev-v"
-              id="btn-dev-v"
-              onclick="emitir('devolver-verde')"
-              title="Deshacer"
-            >
-              ↩
-            </button>
-
-            <button
-              class="ficha-btn usar-v"
-              id="btn-usar-v"
-              onclick="emitir('usar-verde')"
-            >
-              +
-            </button>
+      <div id="player-actions" class="card">
+        <div class="card-title">Usar fichas</div>
+        <div class="action-row">
+          <div class="action-info"><strong>🟢 Ficha Verde</strong><span>Recurso renovable · +1 punto · sin residuo</span></div>
+          <div class="action-buttons">
+            <button id="btn-dev-v" class="icon-btn undo" onclick="emitir('devolver-verde')" title="Deshacer ficha verde">↩</button>
+            <button id="btn-usar-v" class="icon-btn use-green" onclick="emitir('usar-verde')" title="Usar ficha verde">+</button>
           </div>
         </div>
-
-        <div class="accion-row">
-          <div class="accion-info">
-            <span class="accion-nombre">
-              🟡 Ficha Amarilla
-            </span>
-
-            <span class="accion-desc">
-              Recurso limitado · +3 puntos · genera 1 residuo 🔴
-            </span>
-          </div>
-
-          <div class="accion-btns">
-            <button
-              class="ficha-btn dev-a"
-              id="btn-dev-a"
-              onclick="emitir('devolver-amarillo')"
-              title="Deshacer"
-            >
-              ↩
-            </button>
-
-            <button
-              class="ficha-btn usar-a"
-              id="btn-usar-a"
-              onclick="emitir('usar-amarillo')"
-            >
-              +
-            </button>
+        <div class="action-row">
+          <div class="action-info"><strong>🟡 Ficha Amarilla</strong><span>Recurso limitado · +3 puntos · genera 1 residuo</span></div>
+          <div class="action-buttons">
+            <button id="btn-dev-a" class="icon-btn undo" onclick="emitir('devolver-amarillo')" title="Deshacer ficha amarilla">↩</button>
+            <button id="btn-usar-a" class="icon-btn use-yellow" onclick="emitir('usar-amarillo')" title="Usar ficha amarilla">+</button>
           </div>
         </div>
       </div>
 
-      <!-- Banco de ronda 3 -->
-      <div
-        class="banco-card hidden"
-        id="banco-card"
-      >
-        <div class="banco-title">
-          🏦 Banco Común de Recursos
+      <div id="government-card" class="special-card government hidden">
+        <div class="special-title">🏛️ Banco de Gobierno · Ronda 3</div>
+        <div class="bank-grid">
+          <div class="bank-item"><span id="banco-verde" class="bank-count green">20</span><span class="bank-label">Fichas verdes</span><button id="btn-banco-v" class="bank-btn green" onclick="emitir('tomar-banco',{tipo:'verde'})">Tomar 1 verde</button></div>
+          <div class="bank-item"><span id="banco-amarillo" class="bank-count yellow">15</span><span class="bank-label">Fichas amarillas</span><button id="btn-banco-a" class="bank-btn yellow" onclick="emitir('tomar-banco',{tipo:'amarillo'})">Tomar 1 amarilla</button></div>
         </div>
-
-        <div class="banco-grid">
-          <div class="banco-item">
-            <span
-              class="banco-count verde"
-              id="banco-verde"
-            >
-              20
-            </span>
-
-            <span class="banco-label">
-              Fichas Verdes
-            </span>
-
-            <button
-              class="banco-btn verde"
-              id="btn-banco-v"
-              onclick="emitir('tomar-banco', { tipo: 'verde' })"
-            >
-              Tomar 1 verde
-            </button>
-          </div>
-
-          <div class="banco-item">
-            <span
-              class="banco-count amarillo"
-              id="banco-amarillo"
-            >
-              15
-            </span>
-
-            <span class="banco-label">
-              Fichas Amarillas
-            </span>
-
-            <button
-              class="banco-btn amarillo"
-              id="btn-banco-a"
-              onclick="emitir('tomar-banco', { tipo: 'amarillo' })"
-            >
-              Tomar 1 amarilla
-            </button>
-          </div>
-        </div>
+        <button id="btn-exchange" class="btn exchange" onclick="emitir('intercambiar-residuos')">♻️ Canjear 2 residuos por 1 verde</button>
+        <p class="special-note">El subsidio lo activa el facilitador para equipos con un promedio de hasta 2 residuos.</p>
       </div>
 
-      <!-- Controles del facilitador -->
-      <div
-        class="facilitador-card"
-        id="facilitador-card"
-        style="display: none"
-      >
-        <div class="facilitador-title">
-          ⚙️ Controles del facilitador
+      <div id="crisis-card" class="special-card crisis hidden">
+        <div class="special-title">⚠️ Crisis de Recursos · Ronda 5</div>
+        <div class="bank-grid">
+          <div class="bank-item"><span id="crisis-verde" class="bank-count green">6</span><span class="bank-label">Verdes restantes</span><button id="btn-crisis-v" class="bank-btn green" onclick="emitir('tomar-banco',{tipo:'verde'})">Tomar 1 verde</button></div>
+          <div class="bank-item"><span id="crisis-amarillo" class="bank-count yellow">4</span><span class="bank-label">Amarillas restantes</span><button id="btn-crisis-a" class="bank-btn yellow" onclick="emitir('tomar-banco',{tipo:'amarillo'})">Tomar 1 amarilla</button></div>
         </div>
-
-        <div class="fac-btns">
-          <button
-            class="fac-btn avanzar"
-            id="btn-sig-ronda"
-            onclick="accionFacilitador()"
-          >
-            Avanzar a Ronda 2 →
-          </button>
-
-          <button
-            class="fac-btn regen hidden"
-            id="btn-regen"
-            onclick="emitir('aplicar-regen')"
-          >
-            🌱 Aplicar regeneración
-          </button>
-
-          <button
-            class="fac-btn reiniciar"
-            onclick="confirmarReinicio()"
-          >
-            ↺ Reiniciar juego
-          </button>
-        </div>
+        <p class="special-note">El banco tiene pocas fichas. Los recursos se asignan a quienes los tomen primero.</p>
       </div>
 
+      <div id="facilitator-card" class="card facilitator" style="display:none">
+        <div class="card-title">⚙️ Controles del facilitador</div>
+        <div class="fac-buttons">
+          <button id="btn-subsidy" class="fac-btn fac-subsidy hidden" onclick="emitir('aplicar-subsidio')">🎁 Aplicar subsidio automático</button>
+          <button id="btn-regen" class="fac-btn fac-regen hidden" onclick="emitir('aplicar-regen')">🌱 Aplicar regeneración</button>
+          <button id="btn-next" class="fac-btn fac-primary" onclick="accionFacilitador()">Avanzar a Ronda 2 →</button>
+          <button class="fac-btn fac-reset" onclick="confirmarReinicio()">↺ Reiniciar juego</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Pestaña: Torres -->
-  <div
-    id="tab-torres"
-    class="tab-pane"
-  >
-    <div
-      class="torres-scroll"
-      id="torres-container"
-    >
-      <p
-        style="
-          color: var(--muted);
-          font-size: 0.85rem;
-          text-align: center;
-          padding: 2rem 0;
-        "
-      >
-        Esperando jugadores...
-      </p>
-    </div>
-  </div>
-
-  <!-- Pestaña: Ranking -->
-  <div
-    id="tab-ranking"
-    class="tab-pane"
-  >
-    <div
-      class="ranking-scroll"
-      id="ranking-container"
-    ></div>
-  </div>
+  <section id="tab-torres" class="tab-pane"><div id="torres-container" class="scroll"></div></section>
+  <section id="tab-ranking" class="tab-pane"><div id="ranking-container" class="scroll"></div></section>
 </div>
 
-<!-- Toasts -->
 <div id="toast-wrap"></div>
 
-<!-- Resultado final -->
-<div
-  id="winner-wrap"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="winner-title"
->
-  <div class="winner-card">
-    <div class="winner-trophy">
-      🏆
-    </div>
-
-    <div class="winner-kicker">
-      Partida finalizada
-    </div>
-
-    <h2
-      class="winner-title"
-      id="winner-title"
-    >
-      ¡Tenemos un ganador!
-    </h2>
-
-    <p
-      class="winner-score"
-      id="winner-score"
-    ></p>
-
-    <div
-      class="final-list"
-      id="final-list"
-    ></div>
-
-    <div class="winner-actions">
-      <button
-        class="btn btn-secondary"
-        type="button"
-        onclick="cerrarGanador()"
-      >
-        Ver tablero
-      </button>
-
-      <button
-        class="btn btn-primary hidden"
-        id="winner-restart"
-        type="button"
-        onclick="cerrarGanador(); confirmarReinicio();"
-      >
-        Jugar de nuevo
-      </button>
+<div id="modal-wrap" class="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div id="modal-icon" class="modal-icon">❓</div>
+    <h3 id="modal-title"></h3>
+    <p id="modal-desc"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+      <button id="modal-confirm" class="btn btn-primary"></button>
     </div>
   </div>
 </div>
 
-<!-- Modal de confirmación -->
-<div
-  id="modal-wrap"
-  style="
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.5);
-  "
->
-  <div
-    id="modal-box"
-    style="
-      width: 100%;
-      max-width: 320px;
-      padding: 1.75rem;
-      background: #ffffff;
-      border-radius: 18px;
-      text-align: center;
-    "
-  >
-    <div
-      id="modal-icon"
-      style="
-        margin-bottom: 0.5rem;
-        font-size: 2.2rem;
-      "
-    >
-      ❓
-    </div>
-
-    <h3
-      id="modal-title"
-      style="
-        margin-bottom: 0.5rem;
-        font-size: 1.1rem;
-        font-weight: 700;
-      "
-    ></h3>
-
-    <p
-      id="modal-desc"
-      style="
-        margin-bottom: 1.25rem;
-        color: #64748b;
-        font-size: 0.85rem;
-        line-height: 1.5;
-      "
-    ></p>
-
-    <div
-      style="
-        display: flex;
-        gap: 10px;
-      "
-    >
-      <button
-        onclick="cerrarModal()"
-        style="
-          flex: 1;
-          padding: 11px;
-          background: #ffffff;
-          border: 1.5px solid #e2e8f0;
-          border-radius: 9px;
-          font-size: 0.9rem;
-          cursor: pointer;
-        "
-      >
-        Cancelar
-      </button>
-
-      <button
-        id="modal-confirm"
-        style="
-          flex: 1;
-          padding: 11px;
-          color: #ffffff;
-          background: #16a34a;
-          border: none;
-          border-radius: 9px;
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-        "
-      ></button>
+<div id="winner-wrap" class="overlay" role="dialog" aria-modal="true" aria-labelledby="winner-title">
+  <div class="winner-card">
+    <div class="winner-trophy">🏆</div>
+    <div class="winner-kicker">Resultado final · 6 rondas</div>
+    <h2 id="winner-title">¡Tenemos un ganador!</h2>
+    <p id="winner-score"></p>
+    <div id="final-list" class="final-list"></div>
+    <div class="winner-actions">
+      <button class="btn btn-secondary" onclick="cerrarGanador()">Ver ranking</button>
+      <button id="winner-restart" class="btn btn-primary hidden" onclick="cerrarGanador();confirmarReinicio()">Jugar de nuevo</button>
     </div>
   </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-
 <script>
 const socket = io();
+const TOTAL_RONDAS = 6;
+const EQUIPOS = ['Alfa','Beta','Gamma','Delta','Epsilon'];
+const EQUIPO_COLOR = {Alfa:'#6366f1',Beta:'#ec4899',Gamma:'#f59e0b',Delta:'#10b981',Epsilon:'#3b82f6'};
+const RONDAS = {
+  1:{cls:'r1',texto:'🔓 Ronda 1 — Uso libre · Usa lo que quieras'},
+  2:{cls:'r2',texto:'🌱 Ronda 2 — Regeneración · Los residuos reducen la recuperación'},
+  3:{cls:'r3',texto:'🏛️ Ronda 3 — Banco de Gobierno · Fondo, canje y subsidios'},
+  4:{cls:'r4',texto:'🔓 Ronda 4 — Uso libre · Segunda oportunidad para cambiar la estrategia'},
+  5:{cls:'r5',texto:'⚠️ Ronda 5 — Crisis de recursos · El banco es limitado'},
+  6:{cls:'r6',texto:'🌿 Ronda 6 — Regeneración final · El estado final define al ganador'}
+};
 
-// ── Estado local ─────────────────────────────────────────
 let myId = null;
-let myRoom = null;
+let roomCode = null;
 let state = null;
 let ronda = 1;
 let lobbyMode = null;
-let selectedTeam = "";
+let selectedTeam = '';
 let winnerShown = false;
-
-// ── Audio interactivo ────────────────────────────────────
-let audioCtx = null;
+let audioContext = null;
 let soundEnabled = true;
+const roomFromQR = (new URLSearchParams(window.location.search).get('sala') || '')
+  .trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
 
-function ensureAudio() {
-  if (!soundEnabled) {
-    return null;
-  }
-
-  const AudioContext =
-    window.AudioContext ||
-    window.webkitAudioContext;
-
-  if (!AudioContext) {
-    return null;
-  }
-
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-  }
-
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-
-  return audioCtx;
+function audio(){
+  if(!soundEnabled)return null;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContext)return null;
+  if(!audioContext)audioContext = new AudioContext();
+  if(audioContext.state === 'suspended')audioContext.resume();
+  return audioContext;
 }
-
-function playSound(type = "click") {
-  const ctx = ensureAudio();
-
-  if (!ctx) {
-    return;
-  }
-
-  const sounds = {
-    click: [
-      [440, 0, 0.045, 0.035]
-    ],
-    select: [
-      [560, 0, 0.06, 0.045],
-      [760, 0.05, 0.07, 0.035]
-    ],
-    success: [
-      [523, 0, 0.09, 0.05],
-      [659, 0.09, 0.09, 0.05],
-      [784, 0.18, 0.14, 0.05]
-    ],
-    action: [
-      [660, 0, 0.05, 0.045],
-      [880, 0.045, 0.08, 0.035]
-    ],
-    undo: [
-      [540, 0, 0.05, 0.035],
-      [390, 0.05, 0.09, 0.035]
-    ],
-    bank: [
-      [330, 0, 0.05, 0.04],
-      [494, 0.055, 0.08, 0.04]
-    ],
-    round: [
-      [392, 0, 0.1, 0.05],
-      [523, 0.1, 0.1, 0.05],
-      [659, 0.2, 0.18, 0.055]
-    ],
-    error: [
-      [240, 0, 0.1, 0.045],
-      [190, 0.09, 0.13, 0.04]
-    ],
-    victory: [
-      [523, 0, 0.13, 0.06],
-      [659, 0.12, 0.13, 0.06],
-      [784, 0.24, 0.13, 0.06],
-      [1047, 0.36, 0.35, 0.07]
-    ]
+function playSound(type='click'){
+  const ctx=audio();if(!ctx)return;
+  const sounds={
+    click:[[440,0,.05,.03]],select:[[560,0,.06,.04],[760,.05,.07,.03]],
+    action:[[660,0,.05,.04],[880,.045,.08,.03]],undo:[[540,0,.05,.03],[390,.05,.09,.03]],
+    bank:[[330,0,.06,.04],[494,.06,.09,.04]],success:[[523,0,.09,.05],[659,.09,.09,.05],[784,.18,.14,.05]],
+    round:[[392,0,.10,.05],[523,.10,.10,.05],[659,.20,.18,.055]],
+    error:[[240,0,.10,.04],[190,.09,.13,.035]],victory:[[523,0,.13,.06],[659,.12,.13,.06],[784,.24,.13,.06],[1047,.36,.35,.07]]
   };
-
-  const notes =
-    sounds[type] ||
-    sounds.click;
-
-  notes.forEach(
-    ([frequency, delay, duration, volume]) => {
-      const oscillator =
-        ctx.createOscillator();
-
-      const gain =
-        ctx.createGain();
-
-      const start =
-        ctx.currentTime + delay;
-
-      oscillator.type =
-        type === "error"
-          ? "sawtooth"
-          : "sine";
-
-      oscillator.frequency.setValueAtTime(
-        frequency,
-        start
-      );
-
-      gain.gain.setValueAtTime(
-        0.0001,
-        start
-      );
-
-      gain.gain.exponentialRampToValueAtTime(
-        volume,
-        start + 0.012
-      );
-
-      gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        start + duration
-      );
-
-      oscillator
-        .connect(gain)
-        .connect(ctx.destination);
-
-      oscillator.start(start);
-      oscillator.stop(
-        start + duration + 0.02
-      );
-    }
-  );
-}
-
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-
-  const button =
-    document.getElementById("audio-toggle");
-
-  button.textContent =
-    soundEnabled
-      ? "🔊"
-      : "🔇";
-
-  button.setAttribute(
-    "aria-label",
-    soundEnabled
-      ? "Desactivar sonidos"
-      : "Activar sonidos"
-  );
-
-  button.title =
-    soundEnabled
-      ? "Desactivar sonidos"
-      : "Activar sonidos";
-
-  if (soundEnabled) {
-    playSound("select");
-  }
-}
-
-// ── Helpers de interfaz ──────────────────────────────────
-function showTab(name, button) {
-  document
-    .querySelectorAll(".tab-pane")
-    .forEach((pane) => {
-      pane.classList.remove("active");
-    });
-
-  document
-    .querySelectorAll(".tab-btn")
-    .forEach((tabButton) => {
-      tabButton.classList.remove("active");
-    });
-
-  document
-    .getElementById(`tab-${name}`)
-    .classList.add("active");
-
-  button.classList.add("active");
-}
-
-function showLobbyError(message) {
-  const element =
-    document.getElementById("lobby-error");
-
-  element.textContent = message;
-  element.style.display = "block";
-}
-
-function hideLobbyError() {
-  document
-    .getElementById("lobby-error")
-    .style.display = "none";
-}
-
-function escapeHTML(value) {
-  return String(value).replace(
-    /[&<>'"]/g,
-    (character) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      "'": "&#39;",
-      '"': "&quot;"
-    })[character]
-  );
-}
-
-// ── Toasts ───────────────────────────────────────────────
-function showToast(message, type = "info") {
-  const wrapper =
-    document.getElementById("toast-wrap");
-
-  const element =
-    document.createElement("div");
-
-  element.className =
-    `toast-item ${type}`;
-
-  element.textContent = message;
-
-  wrapper.appendChild(element);
-
-  setTimeout(() => {
-    element.style.opacity = "0";
-    element.style.transition =
-      "opacity 0.3s";
-
-    setTimeout(() => {
-      element.remove();
-    }, 300);
-  }, 2800);
-}
-
-// ── Modal de confirmación ────────────────────────────────
-function abrirModal(
-  icon,
-  title,
-  description,
-  confirmText,
-  onConfirm
-) {
-  document
-    .getElementById("modal-icon")
-    .textContent = icon;
-
-  document
-    .getElementById("modal-title")
-    .textContent = title;
-
-  document
-    .getElementById("modal-desc")
-    .textContent = description;
-
-  const button =
-    document.getElementById("modal-confirm");
-
-  button.textContent = confirmText;
-
-  button.onclick = () => {
-    cerrarModal();
-    onConfirm();
-  };
-
-  document
-    .getElementById("modal-wrap")
-    .style.display = "flex";
-}
-
-function cerrarModal() {
-  document
-    .getElementById("modal-wrap")
-    .style.display = "none";
-}
-
-// ── Comunicación con Socket.IO ───────────────────────────
-function emitir(eventName, data) {
-  const soundMap = {
-    "usar-verde": "action",
-    "usar-amarillo": "action",
-    "devolver-verde": "undo",
-    "devolver-amarillo": "undo",
-    "tomar-banco": "bank",
-    "aplicar-regen": "success"
-  };
-
-  if (soundMap[eventName]) {
-    playSound(soundMap[eventName]);
-  }
-
-  socket.emit(eventName, data);
-}
-
-// ── Acciones del lobby ───────────────────────────────────
-function abrirFlujo(mode) {
-  lobbyMode = mode;
-  selectedTeam = "";
-
-  document
-    .querySelectorAll(".team-choice")
-    .forEach((button) => {
-      button.classList.remove("selected");
-      button.setAttribute(
-        "aria-pressed",
-        "false"
-      );
-    });
-
-  hideLobbyError();
-
-  document
-    .getElementById("lobby-home")
-    .classList.add("hidden");
-
-  document
-    .getElementById("lobby-form")
-    .classList.remove("hidden");
-
-  const isJoin =
-    mode === "unirse";
-
-  document
-    .getElementById("form-title")
-    .textContent =
-      isJoin
-        ? "Unirse a una Sala"
-        : "Crear Sala Nueva";
-
-  document
-    .getElementById("form-subtitle")
-    .textContent =
-      isJoin
-        ? "Escribe el código, tu nombre y selecciona un equipo."
-        : "Configura tu perfil; tú controlarás las rondas.";
-
-  document
-    .getElementById("code-field")
-    .classList.toggle(
-      "hidden",
-      !isJoin
-    );
-
-  document
-    .getElementById("lobby-submit")
-    .textContent =
-      isJoin
-        ? "→ Unirse a una Sala"
-        : "✨ Crear Sala Nueva";
-
-  playSound("select");
-
-  setTimeout(() => {
-    document
-      .getElementById(
-        isJoin
-          ? "f-code"
-          : "f-nombre"
-      )
-      .focus();
-  }, 50);
-}
-
-function volverInicio() {
-  lobbyMode = null;
-
-  hideLobbyError();
-
-  document
-    .getElementById("lobby-form")
-    .classList.add("hidden");
-
-  document
-    .getElementById("lobby-home")
-    .classList.remove("hidden");
-
-  playSound("click");
-}
-
-function seleccionarEquipo(button) {
-  selectedTeam =
-    button.dataset.team;
-
-  document
-    .querySelectorAll(".team-choice")
-    .forEach((item) => {
-      const selected =
-        item === button;
-
-      item.classList.toggle(
-        "selected",
-        selected
-      );
-
-      item.setAttribute(
-        "aria-pressed",
-        String(selected)
-      );
-    });
-
-  hideLobbyError();
-  playSound("select");
-}
-
-function getLobbyData() {
-  const nombre =
-    document
-      .getElementById("f-nombre")
-      .value
-      .trim();
-
-  const equipo =
-    selectedTeam;
-
-  if (!nombre) {
-    showLobbyError(
-      "Por favor escribe tu nombre."
-    );
-    return null;
-  }
-
-  if (!equipo) {
-    showLobbyError(
-      "Por favor elige tu equipo."
-    );
-    return null;
-  }
-
-  hideLobbyError();
-
-  return {
-    nombre,
-    equipo
-  };
-}
-
-function crearSala() {
-  const data = getLobbyData();
-
-  if (!data) {
-    return;
-  }
-
-  socket.emit(
-    "crear",
-    data
-  );
-}
-
-function unirse() {
-  const data = getLobbyData();
-
-  if (!data) {
-    return;
-  }
-
-  const code =
-    document
-      .getElementById("f-code")
-      .value
-      .trim()
-      .toUpperCase();
-
-  if (
-    !code ||
-    code.length !== 5
-  ) {
-    showLobbyError(
-      "El código debe tener 5 caracteres."
-    );
-    return;
-  }
-
-  socket.emit(
-    "unirse",
-    {
-      ...data,
-      code
-    }
-  );
-}
-
-function enviarLobby() {
-  if (lobbyMode === "crear") {
-    crearSala();
-    return;
-  }
-
-  if (lobbyMode === "unirse") {
-    unirse();
-  }
-}
-
-// ── Acciones del facilitador ─────────────────────────────
-function confirmarSigRonda() {
-  if (ronda >= 3) {
-    return;
-  }
-
-  const messages = [
-    "",
-    "¿Avanzar a la Ronda 2?",
-    "¿Avanzar a la Ronda 3?"
-  ];
-
-  const descriptions = [
-    "",
-    "La regeneración de fichas verdes se aplicará automáticamente. Las fichas rojas reducen cuántas verdes recuperas.",
-    "Se activará el banco común de recursos para todos los jugadores."
-  ];
-
-  abrirModal(
-    "🚀",
-    messages[ronda],
-    descriptions[ronda],
-    "Avanzar",
-    () => emitir("sig-ronda")
-  );
-}
-
-function confirmarFinalizar() {
-  abrirModal(
-    "🏆",
-    "¿Finalizar y revelar al ganador?",
-    "Se sumarán los puntos de cada equipo. La partida quedará bloqueada hasta que la reinicies.",
-    "Mostrar ganador",
-    () => socket.emit("finalizar")
-  );
-}
-
-function accionFacilitador() {
-  if (
-    state &&
-    state.terminado
-  ) {
-    return;
-  }
-
-  if (ronda < 3) {
-    confirmarSigRonda();
-    return;
-  }
-
-  confirmarFinalizar();
-}
-
-function confirmarReinicio() {
-  abrirModal(
-    "↺",
-    "¿Reiniciar el juego?",
-    "Se borrarán todos los puntos y fichas. Todos vuelven al estado inicial.",
-    "Reiniciar",
-    () => emitir("reiniciar")
-  );
-}
-
-// ── Resultado final ──────────────────────────────────────
-function mostrarGanador(
-  resultado,
-  esFacilitador
-) {
-  if (
-    !resultado ||
-    !resultado.clasificacion
-  ) {
-    return;
-  }
-
-  const empate =
-    resultado.ganadores.length > 1;
-
-  const nombres =
-    resultado.ganadores
-      .map((equipo) => `Equipo ${equipo}`)
-      .join(" y ");
-
-  document
-    .getElementById("winner-title")
-    .textContent =
-      empate
-        ? "¡Tenemos un empate!"
-        : `¡${nombres} gana!`;
-
-  document
-    .getElementById("winner-score")
-    .textContent =
-      empate
-        ? `${nombres} comparten el primer lugar con ${resultado.puntajeGanador} puntos.`
-        : `El ${nombres} alcanza ${resultado.puntajeGanador} puntos.`;
-
-  const medals = [
-    "🥇",
-    "🥈",
-    "🥉"
-  ];
-
-  document
-    .getElementById("final-list")
-    .innerHTML =
-      resultado.clasificacion
-        .map((item, index) => {
-          const ganador =
-            resultado.ganadores.includes(
-              item.equipo
-            );
-
-          const color =
-            EQUIPO_COLOR[item.equipo] ||
-            "#64748b";
-
-          return `
-            <div class="final-row ${ganador ? "winner" : ""}">
-              <span class="final-pos">
-                ${medals[index] || index + 1}
-              </span>
-
-              <span
-                class="team-dot"
-                style="
-                  display: inline-block;
-                  width: 10px;
-                  height: 10px;
-                  background: ${color};
-                  border-radius: 50%;
-                "
-              ></span>
-
-              <span class="final-team">
-                Equipo ${item.equipo}
-              </span>
-
-              <span class="final-points">
-                ${item.puntos} pts
-              </span>
-            </div>
-          `;
-        })
-        .join("");
-
-  document
-    .getElementById("winner-restart")
-    .classList.toggle(
-      "hidden",
-      !esFacilitador
-    );
-
-  document
-    .getElementById("winner-wrap")
-    .style.display = "flex";
-
-  winnerShown = true;
-
-  playSound("victory");
-}
-
-function cerrarGanador() {
-  document
-    .getElementById("winner-wrap")
-    .style.display = "none";
-
-  const rankingButton =
-    document.querySelector(
-      ".tab-btn:nth-child(3)"
-    );
-
-  if (rankingButton) {
-    showTab(
-      "ranking",
-      rankingButton
-    );
-  }
-}
-
-// ── Entrada al juego ─────────────────────────────────────
-function entrarAlJuego(code, id) {
-  myId = id;
-  myRoom = code;
-
-  document
-    .getElementById("lobby")
-    .style.display = "none";
-
-  document
-    .getElementById("game")
-    .style.display = "flex";
-
-  document
-    .getElementById("gh-code")
-    .textContent = `SALA ${code}`;
-}
-
-// ── Render principal ─────────────────────────────────────
-function render(gameState) {
-  const estadoAnterior = state;
-
-  state = gameState;
-  ronda = gameState.ronda;
-
-  const me =
-    gameState.players[myId];
-
-  if (!me) {
-    return;
-  }
-
-  document
-    .getElementById("gh-name")
-    .textContent = me.nombre;
-
-  document
-    .getElementById("gh-team")
-    .textContent =
-      `Equipo ${me.equipo}`;
-
-  document
-    .getElementById("ronda-badge")
-    .textContent =
-      gameState.terminado
-        ? "Finalizado"
-        : `Ronda ${ronda}`;
-
-  const banners = {
-    1: {
-      cls: "r1",
-      txt: "🔓 Ronda 1 — Uso libre · Usa todas las fichas que quieras"
-    },
-    2: {
-      cls: "r2",
-      txt: "🌱 Ronda 2 — Regeneración · Los recursos no usados se recuperan"
-    },
-    3: {
-      cls: "r3",
-      txt: "🏦 Ronda 3 — Banco común · Comparte y usa recursos del grupo"
-    }
-  };
-
-  const bannerData =
-    gameState.terminado
-      ? {
-          cls: "r3",
-          txt: "🏆 Partida finalizada · Consulta el resultado y el ranking final"
-        }
-      : banners[ronda];
-
-  const banner =
-    document.getElementById(
-      "ronda-banner"
-    );
-
-  banner.className =
-    `ronda-banner ${bannerData.cls}`;
-
-  banner.textContent =
-    bannerData.txt;
-
-  document
-    .getElementById("s-verde")
-    .textContent =
-      me.fichas.verde;
-
-  document
-    .getElementById("s-amarillo")
-    .textContent =
-      me.fichas.amarillo;
-
-  document
-    .getElementById("s-rojo")
-    .textContent =
-      me.fichas.rojo;
-
-  document
-    .getElementById("s-puntos")
-    .textContent =
-      me.puntos;
-
-  document
-    .getElementById("btn-usar-v")
-    .disabled =
-      gameState.terminado ||
-      me.fichas.verde <= 0;
-
-  document
-    .getElementById("btn-usar-a")
-    .disabled =
-      gameState.terminado ||
-      me.fichas.amarillo <= 0;
-
-  document
-    .getElementById("btn-dev-v")
-    .disabled =
-      gameState.terminado ||
-      me.puntos < 1;
-
-  document
-    .getElementById("btn-dev-a")
-    .disabled =
-      gameState.terminado ||
-      me.puntos < 3 ||
-      me.fichas.rojo <= 0;
-
-  renderMiTorre(me.fichas);
-
-  const bancoCard =
-    document.getElementById(
-      "banco-card"
-    );
-
-  if (ronda === 3) {
-    bancoCard.classList.remove(
-      "hidden"
-    );
-
-    document
-      .getElementById("banco-verde")
-      .textContent =
-        gameState.banco.verde;
-
-    document
-      .getElementById("banco-amarillo")
-      .textContent =
-        gameState.banco.amarillo;
-
-    document
-      .getElementById("btn-banco-v")
-      .disabled =
-        gameState.terminado ||
-        gameState.banco.verde <= 0;
-
-    document
-      .getElementById("btn-banco-a")
-      .disabled =
-        gameState.terminado ||
-        gameState.banco.amarillo <= 0;
-  } else {
-    bancoCard.classList.add(
-      "hidden"
-    );
-  }
-
-  const esFacilitador =
-    myId === gameState.facilitador;
-
-  document
-    .getElementById("facilitador-card")
-    .style.display =
-      esFacilitador
-        ? "block"
-        : "none";
-
-  const nextButton =
-    document.getElementById(
-      "btn-sig-ronda"
-    );
-
-  const regenButton =
-    document.getElementById(
-      "btn-regen"
-    );
-
-  nextButton.disabled =
-    gameState.terminado;
-
-  nextButton.textContent =
-    gameState.terminado
-      ? "✅ Juego finalizado"
-      : (
-          ronda < 3
-            ? `Avanzar a Ronda ${ronda + 1} →`
-            : "🏁 Finalizar y mostrar ganador"
-        );
-
-  if (
-    ronda === 2 &&
-    !gameState.terminado
-  ) {
-    regenButton.classList.remove(
-      "hidden"
-    );
-  } else {
-    regenButton.classList.add(
-      "hidden"
-    );
-  }
-
-  renderTorres(gameState);
-  renderRanking(gameState);
-
-  if (
-    gameState.terminado &&
-    gameState.resultadoFinal &&
-    !winnerShown
-  ) {
-    mostrarGanador(
-      gameState.resultadoFinal,
-      esFacilitador
-    );
-  } else if (
-    !gameState.terminado &&
-    estadoAnterior &&
-    estadoAnterior.terminado
-  ) {
-    winnerShown = false;
-
-    document
-      .getElementById("winner-wrap")
-      .style.display = "none";
-
-    playSound("success");
-  } else if (
-    estadoAnterior &&
-    estadoAnterior.ronda !== gameState.ronda
-  ) {
-    playSound("round");
-  }
-}
-
-// ── Torre personal ───────────────────────────────────────
-function renderMiTorre(fichas) {
-  const wrapper =
-    document.getElementById(
-      "mi-torre-dots"
-    );
-
-  wrapper.innerHTML = "";
-
-  const total = 14;
-  const dots = [];
-
-  for (
-    let index = 0;
-    index < fichas.verde;
-    index++
-  ) {
-    dots.push("verde");
-  }
-
-  for (
-    let index = 0;
-    index < fichas.amarillo;
-    index++
-  ) {
-    dots.push("amarillo");
-  }
-
-  for (
-    let index = 0;
-    index < fichas.rojo;
-    index++
-  ) {
-    dots.push("rojo");
-  }
-
-  while (dots.length < total) {
-    dots.push("vacio");
-  }
-
-  dots.forEach((type) => {
-    const dot =
-      document.createElement("div");
-
-    dot.className =
-      `dot ${type}`;
-
-    wrapper.appendChild(dot);
+  (sounds[type]||sounds.click).forEach(([freq,delay,duration,volume])=>{
+    const osc=ctx.createOscillator(),gain=ctx.createGain(),start=ctx.currentTime+delay;
+    osc.type=type==='error'?'sawtooth':'sine';osc.frequency.setValueAtTime(freq,start);
+    gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.012);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+    osc.connect(gain).connect(ctx.destination);osc.start(start);osc.stop(start+duration+.02);
   });
 }
-
-// ── Colores de equipo ────────────────────────────────────
-const EQUIPO_COLOR = {
-  Alfa: "#6366f1",
-  Beta: "#ec4899",
-  Gamma: "#f59e0b",
-  Delta: "#10b981",
-  Epsilon: "#3b82f6"
-};
-
-// ── Torres ───────────────────────────────────────────────
-function renderTorres(gameState) {
-  const wrapper =
-    document.getElementById(
-      "torres-container"
-    );
-
-  wrapper.innerHTML = "";
-
-  const equipos = {};
-
-  Object.entries(
-    gameState.players
-  ).forEach(([id, player]) => {
-    if (!equipos[player.equipo]) {
-      equipos[player.equipo] = [];
-    }
-
-    equipos[player.equipo].push({
-      id,
-      ...player
-    });
-  });
-
-  const teamNames = [
-    "Alfa",
-    "Beta",
-    "Gamma",
-    "Delta",
-    "Epsilon"
-  ];
-
-  teamNames.forEach((teamName) => {
-    const players =
-      equipos[teamName];
-
-    if (
-      !players ||
-      players.length === 0
-    ) {
-      return;
-    }
-
-    const totalPoints =
-      players.reduce(
-        (total, player) =>
-          total + player.puntos,
-        0
-      );
-
-    const color =
-      EQUIPO_COLOR[teamName] ||
-      "#888888";
-
-    const section =
-      document.createElement("div");
-
-    section.className =
-      "equipo-section";
-
-    section.innerHTML = `
-      <div class="equipo-header">
-        <div
-          class="equipo-dot"
-          style="background: ${color}"
-        ></div>
-
-        <span class="equipo-nombre">
-          Equipo ${teamName}
-        </span>
-
-        <span class="equipo-pts">
-          ${players.length} jugadores · ${totalPoints} pts
-        </span>
-      </div>
-
-      <div
-        class="equipo-players"
-        id="ep-${teamName}"
-      ></div>
-    `;
-
-    wrapper.appendChild(section);
-
-    const playersWrapper =
-      section.querySelector(
-        `#ep-${teamName}`
-      );
-
-    players.forEach((player) => {
-      const esYo =
-        player.id === myId;
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "jugador-torre" +
-        (esYo ? " es-yo" : "");
-
-      const dots = [];
-
-      for (
-        let index = 0;
-        index < player.fichas.verde;
-        index++
-      ) {
-        dots.push("verde");
-      }
-
-      for (
-        let index = 0;
-        index < player.fichas.amarillo;
-        index++
-      ) {
-        dots.push("amarillo");
-      }
-
-      for (
-        let index = 0;
-        index < player.fichas.rojo;
-        index++
-      ) {
-        dots.push("rojo");
-      }
-
-      const dotsHTML =
-        dots
-          .map(
-            (type) =>
-              `<div class="jt-dot ${type}"></div>`
-          )
-          .join("");
-
-      const safeName =
-        escapeHTML(player.nombre);
-
-      card.innerHTML = `
-        <div class="jt-dots">
-          ${
-            dotsHTML ||
-            '<span style="font-size: 0.65rem; color: #aaa">vacío</span>'
-          }
-        </div>
-
-        <div
-          class="jt-nombre"
-          title="${safeName}"
-        >
-          ${esYo ? "⭐ " : ""}${safeName}
-        </div>
-
-        <div class="jt-puntos">
-          ${player.puntos} pts
-        </div>
-      `;
-
-      playersWrapper.appendChild(card);
-    });
-  });
-
-  if (wrapper.innerHTML === "") {
-    wrapper.innerHTML = `
-      <p
-        style="
-          color: var(--muted);
-          font-size: 0.85rem;
-          text-align: center;
-          padding: 2rem 0;
-        "
-      >
-        Esperando jugadores...
-      </p>
-    `;
-  }
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  const btn=document.getElementById('audio-toggle');
+  btn.textContent=soundEnabled?'🔊':'🔇';btn.title=soundEnabled?'Desactivar sonidos':'Activar sonidos';btn.setAttribute('aria-label',btn.title);
+  if(soundEnabled)playSound('select');
 }
 
-// ── Ranking ──────────────────────────────────────────────
-function renderRanking(gameState) {
-  const wrapper =
-    document.getElementById(
-      "ranking-container"
-    );
+function escapeHTML(value){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));}
+function showTab(name,button){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');button.classList.add('active');}
+function showLobbyError(message){const el=document.getElementById('lobby-error');el.textContent=message;el.style.display='block';}
+function hideLobbyError(){document.getElementById('lobby-error').style.display='none';}
+function showToast(message,type='info'){
+  const wrap=document.getElementById('toast-wrap'),el=document.createElement('div');el.className='toast '+type;el.textContent=message;wrap.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300);},2800);
+}
+function abrirModal(icon,title,description,confirmText,onConfirm){
+  document.getElementById('modal-icon').textContent=icon;document.getElementById('modal-title').textContent=title;document.getElementById('modal-desc').textContent=description;
+  const btn=document.getElementById('modal-confirm');btn.textContent=confirmText;btn.onclick=()=>{cerrarModal();onConfirm();};document.getElementById('modal-wrap').style.display='flex';
+}
+function cerrarModal(){document.getElementById('modal-wrap').style.display='none';}
 
-  const medals = [
-    "🥇",
-    "🥈",
-    "🥉"
-  ];
-
-  const finalSummary =
-    gameState.terminado &&
-    gameState.resultadoFinal
-      ? (() => {
-          const empate =
-            gameState.resultadoFinal
-              .ganadores.length > 1;
-
-          const nombres =
-            gameState.resultadoFinal
-              .ganadores
-              .map(
-                (equipo) =>
-                  `Equipo ${equipo}`
-              )
-              .join(" y ");
-
-          return `
-            <div class="winner-summary">
-              <div class="crown">
-                🏆
-              </div>
-
-              <h3>
-                ${
-                  empate
-                    ? "Empate ganador"
-                    : "Equipo ganador"
-                }: ${nombres}
-              </h3>
-
-              <p>
-                ${
-                  gameState.resultadoFinal
-                    .puntajeGanador
-                } puntos acumulados
-              </p>
-            </div>
-          `;
-        })()
-      : "";
-
-  const teamTotals = {};
-  const teamNames = [
-    "Alfa",
-    "Beta",
-    "Gamma",
-    "Delta",
-    "Epsilon"
-  ];
-
-  teamNames.forEach((teamName) => {
-    teamTotals[teamName] = 0;
-  });
-
-  Object
-    .values(gameState.players)
-    .forEach((player) => {
-      if (
-        teamTotals[player.equipo] !==
-        undefined
-      ) {
-        teamTotals[player.equipo] +=
-          player.puntos;
-      }
-    });
-
-  const sortedTeams =
-    teamNames
-      .filter((teamName) =>
-        Object
-          .values(gameState.players)
-          .some(
-            (player) =>
-              player.equipo === teamName
-          )
-      )
-      .sort(
-        (a, b) =>
-          teamTotals[b] -
-          teamTotals[a]
-      );
-
-  const maxTeamPoints =
-    Math.max(
-      ...sortedTeams.map(
-        (teamName) =>
-          teamTotals[teamName]
-      ),
-      1
-    );
-
-  const teamsHTML =
-    sortedTeams.length
-      ? `
-        <div
-          style="
-            margin-bottom: 8px;
-            color: var(--muted);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-          "
-        >
-          🏆 Por equipo
-        </div>
-
-        ${sortedTeams
-          .map((teamName, index) => {
-            const color =
-              EQUIPO_COLOR[teamName] ||
-              "#888888";
-
-            const points =
-              teamTotals[teamName];
-
-            const percentage =
-              Math.round(
-                points /
-                maxTeamPoints *
-                100
-              );
-
-            const isMyTeam =
-              gameState.players[myId] &&
-              gameState.players[myId].equipo ===
-                teamName;
-
-            const playerCount =
-              Object
-                .values(gameState.players)
-                .filter(
-                  (player) =>
-                    player.equipo ===
-                    teamName
-                )
-                .length;
-
-            return `
-              <div
-                class="rank-row ${
-                  index === 0
-                    ? "lider"
-                    : ""
-                }"
-                style="${
-                  isMyTeam
-                    ? `border-color: ${color}; background: #f8f8ff`
-                    : ""
-                }"
-              >
-                <span class="rank-pos">
-                  ${medals[index] || index + 1}
-                </span>
-
-                <div class="rank-info">
-                  <div
-                    class="rank-nombre"
-                    style="color: ${color}"
-                  >
-                    ${
-                      isMyTeam
-                        ? "⭐ "
-                        : ""
-                    }Equipo ${teamName}
-                  </div>
-
-                  <div class="rank-equipo">
-                    ${playerCount} jugadores
-                  </div>
-                </div>
-
-                <div class="rank-bar-wrap">
-                  <div
-                    class="rank-bar"
-                    style="
-                      width: ${percentage}%;
-                      background: ${color};
-                    "
-                  ></div>
-                </div>
-
-                <span class="rank-pts">
-                  ${points}
-                </span>
-              </div>
-            `;
-          })
-          .join("")}
-      `
-      : "";
-
-  const sortedPlayers =
-    Object
-      .entries(gameState.players)
-      .map(
-        ([id, player]) => ({
-          id,
-          ...player
-        })
-      )
-      .sort(
-        (a, b) =>
-          b.puntos - a.puntos
-      );
-
-  const maxPlayerPoints =
-    Math.max(
-      ...sortedPlayers.map(
-        (player) =>
-          player.puntos
-      ),
-      1
-    );
-
-  const individualHTML =
-    sortedPlayers.length
-      ? `
-        <div
-          style="
-            margin: 16px 0 8px;
-            color: var(--muted);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-          "
-        >
-          👤 Individual
-        </div>
-
-        ${sortedPlayers
-          .map((player, index) => {
-            const esYo =
-              player.id === myId;
-
-            const color =
-              EQUIPO_COLOR[player.equipo] ||
-              "#888888";
-
-            const percentage =
-              Math.round(
-                player.puntos /
-                maxPlayerPoints *
-                100
-              );
-
-            const safeName =
-              escapeHTML(player.nombre);
-
-            return `
-              <div
-                class="rank-row ${
-                  index === 0
-                    ? "lider"
-                    : ""
-                }"
-                style="${
-                  esYo
-                    ? `border-color: ${color}; background: #f8f8ff`
-                    : ""
-                }"
-              >
-                <span class="rank-pos">
-                  ${medals[index] || index + 1}
-                </span>
-
-                <div class="rank-info">
-                  <div
-                    class="rank-nombre"
-                    style="color: ${color}"
-                  >
-                    ${
-                      esYo
-                        ? "⭐ "
-                        : ""
-                    }${safeName}
-                  </div>
-
-                  <div class="rank-equipo">
-                    Equipo ${player.equipo}
-                    · 🟢${player.fichas.verde}
-                    🟡${player.fichas.amarillo}
-                    🔴${player.fichas.rojo}
-                  </div>
-                </div>
-
-                <div class="rank-bar-wrap">
-                  <div
-                    class="rank-bar"
-                    style="
-                      width: ${percentage}%;
-                      background: ${color};
-                    "
-                  ></div>
-                </div>
-
-                <span class="rank-pts">
-                  ${player.puntos}
-                </span>
-              </div>
-            `;
-          })
-          .join("")}
-      `
-      : `
-        <p
-          style="
-            color: var(--muted);
-            font-size: 0.85rem;
-            text-align: center;
-            padding: 2rem 0;
-          "
-        >
-          No hay jugadores aún.
-        </p>
-      `;
-
-  wrapper.innerHTML =
-    finalSummary +
-    teamsHTML +
-    individualHTML;
+function abrirFlujo(mode){
+  lobbyMode=mode;selectedTeam='';hideLobbyError();
+  document.querySelectorAll('.team-choice').forEach(btn=>{btn.classList.remove('selected');btn.setAttribute('aria-pressed','false');});
+  document.getElementById('lobby-home').classList.add('hidden');document.getElementById('lobby-form').classList.remove('hidden');
+  const join=mode==='unirse',hasPrefilledCode=join&&roomFromQR.length===5;
+  document.getElementById('form-title').textContent=join?'Unirse a una Sala':'Crear Sala Nueva';
+  document.getElementById('form-subtitle').textContent=join?'Escribe tu nombre, selecciona un equipo y entra.':'Escribe tu nombre para crear y facilitar la sala.';
+  document.getElementById('team-selector').classList.toggle('hidden',!join);
+  document.getElementById('code-field').classList.toggle('hidden',!join||hasPrefilledCode);
+  const prefilled=document.getElementById('prefilled-code');
+  prefilled.classList.toggle('hidden',!hasPrefilledCode);
+  prefilled.textContent=hasPrefilledCode?`Sala ${roomFromQR} · código precargado`:'';
+  if(hasPrefilledCode)document.getElementById('f-code').value=roomFromQR;
+  document.getElementById('lobby-submit').textContent=join?'→ Unirse a una Sala':'✨ Crear Sala Nueva';
+  playSound('select');setTimeout(()=>document.getElementById(join&&!hasPrefilledCode?'f-code':'f-nombre').focus(),50);
+}
+function volverInicio(){lobbyMode=null;hideLobbyError();document.getElementById('lobby-form').classList.add('hidden');document.getElementById('lobby-home').classList.remove('hidden');playSound('click');}
+function seleccionarEquipo(button){selectedTeam=button.dataset.team;document.querySelectorAll('.team-choice').forEach(item=>{const selected=item===button;item.classList.toggle('selected',selected);item.setAttribute('aria-pressed',String(selected));});hideLobbyError();playSound('select');}
+function lobbyData(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  if(!nombre){showLobbyError('Por favor escribe tu nombre.');return null;}
+  if(lobbyMode==='unirse'&&!selectedTeam){showLobbyError('Por favor elige tu equipo.');return null;}
+  hideLobbyError();return lobbyMode==='crear'?{nombre}:{nombre,equipo:selectedTeam};
+}
+function enviarLobby(){
+  const data=lobbyData();if(!data)return;
+  if(lobbyMode==='crear'){socket.emit('crear',data);return;}
+  const code=document.getElementById('f-code').value.trim().toUpperCase();
+  if(code.length!==5){showLobbyError('El código debe tener 5 caracteres.');return;}
+  socket.emit('unirse',{...data,code});
+}
+function emitir(event,data){
+  const map={'usar-verde':'action','usar-amarillo':'action','devolver-verde':'undo','devolver-amarillo':'undo','tomar-banco':'bank','intercambiar-residuos':'success','aplicar-subsidio':'success','aplicar-regen':'success'};
+  if(map[event])playSound(map[event]);socket.emit(event,data);
 }
 
-// ── Eventos de Socket.IO ────────────────────────────────
-socket.on(
-  "joined",
-  ({
-    code,
-    myId: id,
-    state: gameState
-  }) => {
-    entrarAlJuego(
-      code,
-      id
-    );
+function confirmarSiguiente(){
+  if(ronda>=TOTAL_RONDAS)return;
+  const next=ronda+1,info=RONDAS[next];
+  abrirModal('🚀',`¿Avanzar a la Ronda ${next}?`,info.texto.replace(/^\S+\sRonda \d+ — /,''),'Avanzar',()=>socket.emit('sig-ronda'));
+}
+function confirmarFinal(){abrirModal('🏆','¿Finalizar y revelar al ganador?','Se sumarán los puntos de todos los integrantes de cada equipo. La partida quedará bloqueada hasta reiniciarla.','Mostrar ganador',()=>socket.emit('finalizar'));}
+function accionFacilitador(){if(state&&state.terminado)return;ronda<TOTAL_RONDAS?confirmarSiguiente():confirmarFinal();}
+function confirmarReinicio(){abrirModal('↺','¿Reiniciar el juego?','Se restaurarán las fichas, las torres, los residuos y los puntos de todos los jugadores.','Reiniciar',()=>socket.emit('reiniciar'));}
 
-    render(gameState);
+function entrarJuego(code,id){myId=id;roomCode=code;document.getElementById('lobby').style.display='none';document.getElementById('game').style.display='flex';document.getElementById('gh-code').textContent='SALA '+code;}
+function actualizarInvitacion(code){
+  const inviteURL=new URL(window.location.href);inviteURL.search='';inviteURL.hash='';inviteURL.searchParams.set('sala',code);
+  const url=inviteURL.toString(),image=document.getElementById('room-qr'),link=document.getElementById('invite-link');
+  image.src=`/api/qr?url=${encodeURIComponent(url)}`;image.alt=`QR para entrar a la sala ${code}`;
+  document.getElementById('invite-code').textContent=code;link.href=url;link.textContent=url;
+}
+function render(gameState){
+  const previous=state;state=gameState;ronda=gameState.ronda;
+  const facilitator=myId===gameState.facilitador,me=gameState.players[myId]||null;
+  if(!facilitator&&!me)return;
+  document.getElementById('gh-name').textContent=facilitator?gameState.facilitadorNombre:me.nombre;
+  document.getElementById('gh-team').textContent=facilitator?'Facilitador · no participa en el ranking':'Equipo '+me.equipo;
+  document.getElementById('ronda-badge').textContent=gameState.terminado?'Finalizado':`Ronda ${ronda}/6`;
+  const info=gameState.terminado?{cls:'r6',texto:'🏆 Partida finalizada · Consulta el ranking y el resultado final'}:RONDAS[ronda];
+  const banner=document.getElementById('ronda-banner');banner.className='ronda-banner '+info.cls;banner.textContent=info.texto;
 
-    showToast(
-      `Sala ${code} · ¡Listo para jugar!`,
-      "success"
-    );
-
-    playSound("success");
+  document.getElementById('invite-card').style.display=facilitator?'block':'none';
+  document.getElementById('player-tower-card').style.display=facilitator?'none':'block';
+  document.getElementById('player-stats').style.display=facilitator?'none':'grid';
+  document.getElementById('player-actions').style.display=facilitator?'none':'block';
+  if(facilitator)actualizarInvitacion(gameState.code);
+  if(me){
+    document.getElementById('s-verde').textContent=me.fichas.verde;document.getElementById('s-amarillo').textContent=me.fichas.amarillo;document.getElementById('s-rojo').textContent=me.fichas.rojo;
+    document.getElementById('s-usada-v').textContent=me.usadas.verde;document.getElementById('s-usada-a').textContent=me.usadas.amarillo;document.getElementById('s-puntos').textContent=me.puntos;
+    document.getElementById('btn-usar-v').disabled=gameState.terminado||me.fichas.verde<=0;document.getElementById('btn-usar-a').disabled=gameState.terminado||me.fichas.amarillo<=0;
+    document.getElementById('btn-dev-v').disabled=gameState.terminado||me.usadas.verde<=0;document.getElementById('btn-dev-a').disabled=gameState.terminado||me.usadas.amarillo<=0||me.fichas.rojo<=0;
+    renderMiTorre(me);
   }
-);
 
-socket.on(
-  "state",
-  (gameState) => {
-    render(gameState);
+  const government=document.getElementById('government-card'),crisis=document.getElementById('crisis-card');government.classList.toggle('hidden',ronda!==3||facilitator);crisis.classList.toggle('hidden',ronda!==5||facilitator);
+  if(ronda===3&&me){
+    document.getElementById('banco-verde').textContent=gameState.banco.verde;document.getElementById('banco-amarillo').textContent=gameState.banco.amarillo;
+    document.getElementById('btn-banco-v').disabled=gameState.terminado||gameState.banco.verde<=0;document.getElementById('btn-banco-a').disabled=gameState.terminado||gameState.banco.amarillo<=0;
+    document.getElementById('btn-exchange').disabled=gameState.terminado||me.fichas.rojo<2;
   }
-);
-
-socket.on(
-  "toast",
-  ({
-    msg,
-    tipo
-  }) => {
-    showToast(
-      msg,
-      tipo
-    );
+  if(ronda===5&&me){
+    document.getElementById('crisis-verde').textContent=gameState.banco.verde;document.getElementById('crisis-amarillo').textContent=gameState.banco.amarillo;
+    document.getElementById('btn-crisis-v').disabled=gameState.terminado||gameState.banco.verde<=0;document.getElementById('btn-crisis-a').disabled=gameState.terminado||gameState.banco.amarillo<=0;
   }
-);
 
-socket.on(
-  "err",
-  (message) => {
-    showLobbyError(message);
-    showToast(message, "error");
-    playSound("error");
-  }
-);
+  document.getElementById('facilitator-card').style.display=facilitator?'block':'none';
+  const subsidy=document.getElementById('btn-subsidy'),regen=document.getElementById('btn-regen'),next=document.getElementById('btn-next');
+  subsidy.classList.toggle('hidden',ronda!==3||gameState.subsidioAplicado||gameState.terminado);
+  const regenPendiente=[2,6].includes(ronda)&&!gameState.regenAplicada[ronda]&&!gameState.terminado;regen.classList.toggle('hidden',!regenPendiente);
+  next.disabled=gameState.terminado;next.textContent=gameState.terminado?'✅ Juego finalizado':ronda<TOTAL_RONDAS?`Avanzar a Ronda ${ronda+1} →`:'🏁 Finalizar y mostrar ganador';
 
-// ── Atajos del teclado ───────────────────────────────────
-document
-  .getElementById("f-code")
-  .addEventListener(
-    "keydown",
-    (event) => {
-      if (event.key === "Enter") {
-        unirse();
-      }
-    }
-  );
+  renderTorres(gameState);renderRanking(gameState);
+  if(gameState.terminado&&gameState.resultadoFinal&&!winnerShown)mostrarGanador(gameState.resultadoFinal,facilitator);
+  else if(!gameState.terminado&&previous&&previous.terminado){winnerShown=false;document.getElementById('winner-wrap').style.display='none';playSound('success');}
+  else if(previous&&previous.ronda!==gameState.ronda)playSound('round');
+}
 
-document
-  .getElementById("f-nombre")
-  .addEventListener(
-    "keydown",
-    (event) => {
-      if (
-        event.key === "Enter" &&
-        selectedTeam
-      ) {
-        enviarLobby();
-      }
-    }
-  );
+function renderMiTorre(me){
+  const wrap=document.getElementById('mi-torre-dots'),dots=[];wrap.innerHTML='';
+  for(let i=0;i<me.usadas.verde;i++)dots.push('verde');for(let i=0;i<me.usadas.amarillo;i++)dots.push('amarillo');for(let i=0;i<me.fichas.rojo;i++)dots.push('rojo');
+  if(!dots.length){wrap.innerHTML='<span class="empty-tower">Aún no has usado fichas.</span>';return;}
+  dots.forEach(type=>{const dot=document.createElement('div');dot.className='dot '+type;wrap.appendChild(dot);});
+}
+function renderTorres(gameState){
+  const wrap=document.getElementById('torres-container'),grouped={};wrap.innerHTML='';
+  Object.entries(gameState.players).forEach(([id,player])=>{if(!grouped[player.equipo])grouped[player.equipo]=[];grouped[player.equipo].push({id,...player});});
+  EQUIPOS.forEach(team=>{
+    const players=grouped[team];if(!players||!players.length)return;
+    const points=players.reduce((sum,p)=>sum+p.puntos,0),section=document.createElement('div');section.className='team-section';
+    section.innerHTML=`<div class="team-header"><span class="team-dot" style="--team-color:${EQUIPO_COLOR[team]}"></span><strong>Equipo ${team}</strong><span>${players.length} jugadores · ${points} pts</span></div><div class="team-players"></div>`;
+    const row=section.querySelector('.team-players');
+    players.forEach(player=>{
+      const dots=[];for(let i=0;i<player.usadas.verde;i++)dots.push('verde');for(let i=0;i<player.usadas.amarillo;i++)dots.push('amarillo');for(let i=0;i<player.fichas.rojo;i++)dots.push('rojo');
+      const card=document.createElement('div');card.className='player-tower'+(player.id===myId?' me':'');const safe=escapeHTML(player.nombre);
+      card.innerHTML=`<div class="mini-dots">${dots.length?dots.map(type=>`<span class="mini-dot ${type}"></span>`).join(''):'<span class="empty-tower">Vacía</span>'}</div><div class="player-name" title="${safe}">${player.id===myId?'⭐ ':''}${safe}</div><div class="player-meta">Usadas: ${player.usadas.verde+player.usadas.amarillo} · 🔴${player.fichas.rojo}</div><div class="player-points">${player.puntos} pts</div>`;row.appendChild(card);
+    });
+    wrap.appendChild(section);
+  });
+  if(!wrap.children.length)wrap.innerHTML='<p class="empty-tower">Esperando jugadores...</p>';
+}
+function teamRanking(gameState){
+  const totals={};
+  Object.values(gameState.players).forEach(player=>{if(!totals[player.equipo])totals[player.equipo]={equipo:player.equipo,puntos:0,residuos:0,usadas:0,jugadores:0};const item=totals[player.equipo];item.puntos+=player.puntos;item.residuos+=player.fichas.rojo;item.usadas+=player.usadas.verde+player.usadas.amarillo;item.jugadores++;});
+  return Object.values(totals).sort((a,b)=>b.puntos-a.puntos||a.equipo.localeCompare(b.equipo));
+}
+function renderRanking(gameState){
+  const wrap=document.getElementById('ranking-container'),medals=['🥇','🥈','🥉'],teams=teamRanking(gameState),maxTeam=Math.max(...teams.map(t=>t.puntos),1);
+  let html='';
+  if(gameState.terminado&&gameState.resultadoFinal){const result=gameState.resultadoFinal,names=result.ganadores.map(t=>'Equipo '+t).join(' y ');html+=`<div class="winner-summary"><div>🏆</div><h3>${result.ganadores.length>1?'Empate ganador':'Equipo ganador'}: ${names}</h3><p>${result.puntajeGanador} puntos acumulados</p></div>`;}
+  html+='<div class="rank-heading">🏆 Por equipo</div>';
+  html+=teams.map((team,index)=>{const color=EQUIPO_COLOR[team.equipo],pct=Math.round(team.puntos/maxTeam*100),mine=gameState.players[myId]&&gameState.players[myId].equipo===team.equipo;return `<div class="rank-row ${index===0?'leader':''}" style="${mine?`border-color:${color};background:#f8f8ff`:''}"><span class="rank-pos">${medals[index]||index+1}</span><div class="rank-info"><div class="rank-name" style="color:${color}">${mine?'⭐ ':''}Equipo ${team.equipo}</div><div class="rank-detail">${team.jugadores} jugadores · ${team.usadas} usadas · 🔴${team.residuos}</div></div><div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%;background:${color}"></div></div><span class="rank-points">${team.puntos}</span></div>`;}).join('');
+  const players=Object.entries(gameState.players).map(([id,p])=>({id,...p})).sort((a,b)=>b.puntos-a.puntos),maxPlayer=Math.max(...players.map(p=>p.puntos),1);
+  html+='<div class="rank-heading" style="margin-top:10px">👤 Individual</div>';
+  html+=players.map((player,index)=>{const color=EQUIPO_COLOR[player.equipo],pct=Math.round(player.puntos/maxPlayer*100),me=player.id===myId;return `<div class="rank-row ${index===0?'leader':''}" style="${me?`border-color:${color};background:#f8f8ff`:''}"><span class="rank-pos">${medals[index]||index+1}</span><div class="rank-info"><div class="rank-name" style="color:${color}">${me?'⭐ ':''}${escapeHTML(player.nombre)}</div><div class="rank-detail">Equipo ${player.equipo} · usadas ${player.usadas.verde+player.usadas.amarillo} · 🔴${player.fichas.rojo}</div></div><div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%;background:${color}"></div></div><span class="rank-points">${player.puntos}</span></div>`;}).join('');
+  wrap.innerHTML=html||'<p class="empty-tower">No hay jugadores.</p>';
+}
+function mostrarGanador(result,facilitator){
+  const tie=result.ganadores.length>1,names=result.ganadores.map(team=>'Equipo '+team).join(' y '),medals=['🥇','🥈','🥉'];
+  document.getElementById('winner-title').textContent=tie?'¡Tenemos un empate!':`¡${names} gana!`;
+  document.getElementById('winner-score').textContent=tie?`${names} comparten el primer lugar con ${result.puntajeGanador} puntos.`:`${names} alcanza ${result.puntajeGanador} puntos.`;
+  document.getElementById('final-list').innerHTML=result.clasificacion.map((item,index)=>`<div class="final-row ${result.ganadores.includes(item.equipo)?'winner':''}"><span class="final-pos">${medals[index]||index+1}</span><span class="team-dot" style="--team-color:${EQUIPO_COLOR[item.equipo]}"></span><span class="final-team">Equipo ${item.equipo}</span><span class="final-data"><strong>${item.puntos} pts</strong><span>${item.verdesUsadas+item.amarillasUsadas} usadas · 🔴${item.residuos}</span></span></div>`).join('');
+  document.getElementById('winner-restart').classList.toggle('hidden',!facilitator);document.getElementById('winner-wrap').style.display='flex';winnerShown=true;playSound('victory');
+}
+function cerrarGanador(){document.getElementById('winner-wrap').style.display='none';const button=document.querySelector('.tab-btn:nth-child(3)');if(button)showTab('ranking',button);}
 
-// Cerrar modal al hacer clic en el fondo
-document
-  .getElementById("modal-wrap")
-  .addEventListener(
-    "click",
-    function (event) {
-      if (event.target === this) {
-        cerrarModal();
-      }
-    }
-  );
+socket.on('joined',({code,myId:id,state:gameState})=>{entrarJuego(code,id);render(gameState);showToast(`Sala ${code} · ¡Listo para jugar!`,'success');playSound('success');});
+socket.on('state',render);
+socket.on('toast',({msg,tipo})=>showToast(msg,tipo));
+socket.on('err',message=>{showLobbyError(message);showToast(message,'error');playSound('error');});
+
+document.getElementById('f-code').addEventListener('input',event=>{event.target.value=event.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');});
+document.getElementById('f-code').addEventListener('keydown',event=>{if(event.key==='Enter')enviarLobby();});
+document.getElementById('f-nombre').addEventListener('keydown',event=>{if(event.key==='Enter'&&(lobbyMode==='crear'||selectedTeam))enviarLobby();});
+document.getElementById('modal-wrap').addEventListener('click',function(event){if(event.target===this)cerrarModal();});
+if(roomFromQR.length===5)abrirFlujo('unirse');
 </script>
-
 </body>
 </html>
