@@ -43,7 +43,7 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:.6rem .35rem;background:#fff;border:1px solid var(--border);border-radius:10px;text-align:center}.stat strong{display:block;font-size:1.25rem}.stat span{display:block;color:var(--muted);font-size:.65rem}.green strong{color:var(--verde)}.yellow strong{color:var(--am)}.red strong{color:var(--rojo)}.purple strong{color:var(--morado)}
 .action-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:.65rem 0;border-bottom:1px solid var(--border)}.action-row:last-child{border-bottom:0}.action-info{min-width:0}.action-info strong{display:block;font-size:.87rem}.action-info span{display:block;margin-top:2px;color:var(--muted);font-size:.72rem;line-height:1.3}.action-buttons{display:flex;gap:6px;flex-shrink:0}.icon-btn{width:37px;height:37px;display:grid;place-items:center;border:0;border-radius:9px;font-size:1rem;font-weight:800;cursor:pointer}.icon-btn:active{transform:scale(.9)}.icon-btn:disabled,.bank-btn:disabled,.fac-btn:disabled{opacity:.35;cursor:not-allowed}.use-green{background:var(--verde-l);color:var(--verde-d)}.use-yellow{background:var(--am-l);color:var(--am-d)}.undo{background:#f1f5f9;color:var(--muted)}
 .special-card{padding:1rem;border-radius:var(--radius)}.government{background:#f0f9ff;border:1.5px solid #7dd3fc}.crisis{background:#faf5ff;border:1.5px solid #d8b4fe}.special-title{display:flex;align-items:center;gap:6px;margin-bottom:.7rem;font-size:.82rem;font-weight:800}.government .special-title{color:#075985}.crisis .special-title{color:#6b21a8}.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bank-item{padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:10px;text-align:center}.bank-count{display:block;font-size:1.45rem;font-weight:900}.bank-label{display:block;color:var(--muted);font-size:.68rem;margin-bottom:7px}.bank-btn{width:100%;padding:8px;border:0;border-radius:8px;font-size:.77rem;font-weight:700;cursor:pointer}.bank-btn.green{background:var(--verde-l);color:var(--verde-d)}.bank-btn.yellow{background:var(--am-l);color:var(--am-d)}.exchange{margin-top:8px;background:#fff;border:1px solid #bae6fd;color:#0369a1}.special-note{margin-top:8px;color:var(--muted);font-size:.72rem;line-height:1.4}
-.facilitator{background:#fffbeb;border:1px solid #fde68a}.facilitator .card-title{color:#92400e}.fac-buttons{display:grid;gap:8px}.fac-btn{width:100%;padding:10px;border:0;border-radius:9px;font-size:.84rem;font-weight:700;cursor:pointer}.fac-primary{background:var(--verde);color:#fff}.fac-subsidy{background:#ede9fe;color:#5b21b6}.fac-regen{background:var(--verde-l);color:var(--verde-d)}.fac-reset{background:#f1f5f9;color:var(--muted)}
+.facilitator{background:#fffbeb;border:1px solid #fde68a}.facilitator .card-title{color:#92400e}.fac-buttons{display:grid;gap:8px}.fac-btn{width:100%;padding:10px;border:0;border-radius:9px;font-size:.84rem;font-weight:700;cursor:pointer}.fac-primary{background:var(--verde);color:#fff}.fac-team-regen{background:#ede9fe;color:#5b21b6}.fac-regen{background:var(--verde-l);color:var(--verde-d)}.fac-reset{background:#f1f5f9;color:var(--muted)}
 .invite-card{background:#f8fafc;border:1px solid var(--border);text-align:center}.invite-card .card-title{margin-bottom:.55rem}.invite-copy{color:var(--muted);font-size:.75rem;line-height:1.4}.qr-box{width:196px;max-width:100%;margin:.75rem auto;padding:9px;background:#fff;border:1px solid var(--border);border-radius:13px}.qr-box img{display:block;width:100%;height:auto}.invite-code{font-size:1.3rem;font-weight:900;letter-spacing:.15em;color:var(--verde-d)}.invite-link{display:block;margin-top:5px;color:var(--azul);font-size:.68rem;overflow-wrap:anywhere}.prefilled-code{margin:-3px 0 12px;padding:8px 10px;background:var(--azul-l);color:#075985;border-radius:9px;font-size:.78rem;font-weight:700;text-align:center}
 
 /* Torres y ranking */
@@ -53,6 +53,7 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
 /* Toast, modal y ganador */
 #toast-wrap{position:fixed;z-index:2000;top:12px;left:50%;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;transform:translateX(-50%)}.toast{max-width:92vw;padding:9px 16px;background:#1e293b;color:#fff;border-radius:99px;font-size:.79rem;white-space:nowrap;animation:toastIn .22s ease}.toast.success{background:var(--verde-d)}.toast.error{background:var(--rojo-d)}.toast.round{background:var(--morado)}.toast.join{background:var(--azul)}
 .overlay{position:fixed;z-index:1500;inset:0;display:none;align-items:center;justify-content:center;padding:1.25rem;background:rgba(15,23,42,.65);backdrop-filter:blur(4px)}.modal{width:100%;max-width:335px;padding:1.6rem;background:#fff;border-radius:18px;text-align:center}.modal-icon{font-size:2.2rem}.modal h3{font-size:1.08rem;margin:.45rem 0}.modal p{color:var(--muted);font-size:.82rem;line-height:1.5;margin-bottom:1.1rem}.modal-actions{display:flex;gap:8px}.modal-actions button{flex:1}
+.round-info{position:relative;width:100%;max-width:350px;padding:1.65rem 1.5rem;background:#fff;border-radius:18px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.22)}.round-info h3{font-size:1.15rem;color:var(--verde-d);margin-bottom:.65rem}.round-info p{color:var(--text);font-size:.9rem;line-height:1.55}.round-info-close{position:absolute;top:8px;right:9px;width:30px;height:30px;border:0;border-radius:50%;background:#f1f5f9;color:var(--muted);font-size:1.1rem;cursor:pointer}
 #winner-wrap{z-index:2500}.winner-card{width:100%;max-width:400px;max-height:90vh;overflow:auto;padding:1.6rem;background:#fff;border-radius:22px;text-align:center;animation:winnerIn .42s cubic-bezier(.2,.9,.25,1.2)}.winner-trophy{font-size:3.4rem}.winner-kicker{margin-top:4px;color:var(--muted);font-size:.69rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.winner-card h2{margin:5px 0 3px;color:#92400e;font-size:1.38rem}.winner-card>p{color:var(--muted);font-size:.84rem}.final-list{display:grid;gap:7px;margin:1rem 0;text-align:left}.final-row{display:flex;align-items:center;gap:8px;padding:9px 10px;background:#f8fafc;border-radius:9px}.final-row.winner{background:#fffbeb;border:1px solid #fde68a}.final-pos{width:24px;text-align:center}.final-team{flex:1;font-size:.83rem;font-weight:800}.final-data{text-align:right}.final-data strong{display:block;color:var(--morado);font-size:.82rem}.final-data span{display:block;color:var(--muted);font-size:.61rem}.winner-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}@keyframes toastIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}@keyframes winnerIn{from{opacity:0;transform:scale(.82) translateY(18px)}to{opacity:1;transform:none}}
 @media(max-width:360px){.stats-grid{grid-template-columns:repeat(2,1fr)}.tab-btn{font-size:.73rem}.lobby-wrap{padding:1.5rem 1.2rem}}
@@ -147,7 +148,7 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
       </div>
 
       <div id="player-tower-card" class="card">
-        <div class="card-title">Mi torre · fichas usadas</div>
+        <div id="tower-card-title" class="card-title">Mi torre · fichas usadas</div>
         <div id="mi-torre-dots" class="tower-dots"></div>
       </div>
 
@@ -184,8 +185,8 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
           <div class="bank-item"><span id="banco-verde" class="bank-count green">20</span><span class="bank-label">Fichas verdes</span><button id="btn-banco-v" class="bank-btn green" onclick="emitir('tomar-banco',{tipo:'verde'})">Tomar 1 verde</button></div>
           <div class="bank-item"><span id="banco-amarillo" class="bank-count yellow">15</span><span class="bank-label">Fichas amarillas</span><button id="btn-banco-a" class="bank-btn yellow" onclick="emitir('tomar-banco',{tipo:'amarillo'})">Tomar 1 amarilla</button></div>
         </div>
-        <button id="btn-exchange" class="btn exchange" onclick="emitir('intercambiar-residuos')">♻️ Canjear 2 residuos por 1 verde</button>
-        <p class="special-note">El subsidio lo activa el facilitador para equipos con un promedio de hasta 2 residuos.</p>
+        <button id="btn-exchange" class="btn exchange" onclick="canjearResiduos()" title="Requiere 2 residuos y tener menos de 14 fichas verdes">♻️ Canjear 2 residuos por 1 verde</button>
+        <p class="special-note">Canje disponible con 2 residuos y menos de 14 fichas verdes. La Regeneración de equipo la activa el facilitador para equipos con un promedio de hasta 2 residuos.</p>
       </div>
 
       <div id="crisis-card" class="special-card crisis hidden">
@@ -200,7 +201,7 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
       <div id="facilitator-card" class="card facilitator" style="display:none">
         <div class="card-title">⚙️ Controles del facilitador</div>
         <div class="fac-buttons">
-          <button id="btn-subsidy" class="fac-btn fac-subsidy hidden" onclick="emitir('aplicar-subsidio')">🎁 Aplicar subsidio automático</button>
+          <button id="btn-team-regen" class="fac-btn fac-team-regen hidden" onclick="emitir('aplicar-regeneracion-equipo')">🌱 Aplicar Regeneración de equipo</button>
           <button id="btn-regen" class="fac-btn fac-regen hidden" onclick="emitir('aplicar-regen')">🌱 Aplicar regeneración</button>
           <button id="btn-next" class="fac-btn fac-primary" onclick="accionFacilitador()">Avanzar a Ronda 2 →</button>
           <button class="fac-btn fac-reset" onclick="confirmarReinicio()">↺ Reiniciar juego</button>
@@ -241,19 +242,34 @@ button:focus-visible,input:focus-visible{outline:3px solid rgba(22,163,74,.25);o
   </div>
 </div>
 
+<div id="round-info-wrap" class="overlay" role="dialog" aria-modal="true" aria-labelledby="round-info-title">
+  <div class="round-info">
+    <button class="round-info-close" type="button" onclick="cerrarInfoRonda()" aria-label="Cerrar">×</button>
+    <h3 id="round-info-title"></h3>
+    <p id="round-info-message"></p>
+  </div>
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const socket = io();
 const TOTAL_RONDAS = 6;
+const MAX_VERDE = 14;
 const EQUIPOS = ['Alfa','Beta','Gamma','Delta','Epsilon'];
 const EQUIPO_COLOR = {Alfa:'#6366f1',Beta:'#ec4899',Gamma:'#f59e0b',Delta:'#10b981',Epsilon:'#3b82f6'};
 const RONDAS = {
   1:{cls:'r1',texto:'🔓 Ronda 1 — Uso libre · Usa lo que quieras'},
   2:{cls:'r2',texto:'🌱 Ronda 2 — Regeneración · Los residuos reducen la recuperación'},
-  3:{cls:'r3',texto:'🏛️ Ronda 3 — Banco de Gobierno · Fondo, canje y subsidios'},
+  3:{cls:'r3',texto:'🏛️ Ronda 3 — Banco de Gobierno · Fondo, canje y Regeneración de equipo'},
   4:{cls:'r4',texto:'🔓 Ronda 4 — Uso libre · Segunda oportunidad para cambiar la estrategia'},
   5:{cls:'r5',texto:'⚠️ Ronda 5 — Crisis de recursos · El banco es limitado'},
   6:{cls:'r6',texto:'🌿 Ronda 6 — Regeneración final · El estado final define al ganador'}
+};
+const INFORMACION_RONDAS = {
+  2:{titulo:'Regeneración',mensaje:'¡Gracias por cuidar el ambiente! A los jugadores que tienen pocos residuos, los recursos renovables siguen existiendo.'},
+  3:{titulo:'Banco de Gobierno',mensaje:'¡Felicidades! El Gobierno ha creado un sistema para que todos puedan acceder a recursos y materias primas. Toma lo que necesites.'},
+  5:{titulo:'Crisis de Recursos',mensaje:'¡Oh, oh! Todos tomaron demasiado y los recursos se están agotando...'},
+  6:{titulo:'Regeneración',mensaje:'¡Gracias por cuidar el ambiente hasta el final! Los jugadores que tienen pocos residuos recuperan recursos renovables por última vez antes de conocer al equipo ganador.'}
 };
 
 let myId = null;
@@ -265,6 +281,7 @@ let selectedTeam = '';
 let winnerShown = false;
 let audioContext = null;
 let soundEnabled = true;
+const rondasInformadas = new Set();
 const roomFromQR = (new URLSearchParams(window.location.search).get('sala') || '')
   .trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
 
@@ -312,6 +329,15 @@ function abrirModal(icon,title,description,confirmText,onConfirm){
   const btn=document.getElementById('modal-confirm');btn.textContent=confirmText;btn.onclick=()=>{cerrarModal();onConfirm();};document.getElementById('modal-wrap').style.display='flex';
 }
 function cerrarModal(){document.getElementById('modal-wrap').style.display='none';}
+function mostrarInfoRonda(numero){
+  const info=INFORMACION_RONDAS[numero];
+  if(!info||rondasInformadas.has(numero))return;
+  rondasInformadas.add(numero);
+  document.getElementById('round-info-title').textContent=info.titulo;
+  document.getElementById('round-info-message').textContent=info.mensaje;
+  document.getElementById('round-info-wrap').style.display='flex';
+}
+function cerrarInfoRonda(){document.getElementById('round-info-wrap').style.display='none';}
 
 function abrirFlujo(mode){
   lobbyMode=mode;selectedTeam='';hideLobbyError();
@@ -345,8 +371,13 @@ function enviarLobby(){
   socket.emit('unirse',{...data,code});
 }
 function emitir(event,data){
-  const map={'usar-verde':'action','usar-amarillo':'action','devolver-verde':'undo','devolver-amarillo':'undo','tomar-banco':'bank','intercambiar-residuos':'success','aplicar-subsidio':'success','aplicar-regen':'success'};
+  const map={'usar-verde':'action','usar-amarillo':'action','devolver-verde':'undo','devolver-amarillo':'undo','tomar-banco':'bank','aplicar-regeneracion-equipo':'success','aplicar-regen':'success'};
   if(map[event])playSound(map[event]);socket.emit(event,data);
+}
+function canjearResiduos(){
+  socket.emit('intercambiar-residuos',resultado=>{
+    playSound(resultado&&resultado.ok?'success':'error');
+  });
 }
 
 function confirmarSiguiente(){
@@ -367,7 +398,8 @@ function actualizarInvitacion(code){
 }
 function render(gameState){
   const previous=state;state=gameState;ronda=gameState.ronda;
-  const facilitator=myId===gameState.facilitador,me=gameState.players[myId]||null;
+  const facilitator=myId===gameState.facilitador;
+  const me=facilitator?gameState.facilitadorDemo:(gameState.players[myId]||null);
   if(!facilitator&&!me)return;
   document.getElementById('gh-name').textContent=facilitator?gameState.facilitadorNombre:me.nombre;
   document.getElementById('gh-team').textContent=facilitator?'Facilitador · no participa en el ranking':'Equipo '+me.equipo;
@@ -376,9 +408,10 @@ function render(gameState){
   const banner=document.getElementById('ronda-banner');banner.className='ronda-banner '+info.cls;banner.textContent=info.texto;
 
   document.getElementById('invite-card').style.display=facilitator?'block':'none';
-  document.getElementById('player-tower-card').style.display=facilitator?'none':'block';
-  document.getElementById('player-stats').style.display=facilitator?'none':'grid';
-  document.getElementById('player-actions').style.display=facilitator?'none':'block';
+  document.getElementById('player-tower-card').style.display='block';
+  document.getElementById('player-stats').style.display='grid';
+  document.getElementById('player-actions').style.display='block';
+  document.getElementById('tower-card-title').textContent=facilitator?'Mis fichas de demostración':'Mi torre · fichas usadas';
   if(facilitator)actualizarInvitacion(gameState.code);
   if(me){
     document.getElementById('s-verde').textContent=me.fichas.verde;document.getElementById('s-amarillo').textContent=me.fichas.amarillo;document.getElementById('s-rojo').textContent=me.fichas.rojo;
@@ -392,7 +425,7 @@ function render(gameState){
   if(ronda===3&&me){
     document.getElementById('banco-verde').textContent=gameState.banco.verde;document.getElementById('banco-amarillo').textContent=gameState.banco.amarillo;
     document.getElementById('btn-banco-v').disabled=gameState.terminado||gameState.banco.verde<=0;document.getElementById('btn-banco-a').disabled=gameState.terminado||gameState.banco.amarillo<=0;
-    document.getElementById('btn-exchange').disabled=gameState.terminado||me.fichas.rojo<2;
+    document.getElementById('btn-exchange').disabled=gameState.terminado||me.fichas.rojo<2||me.fichas.verde>=MAX_VERDE;
   }
   if(ronda===5&&me){
     document.getElementById('crisis-verde').textContent=gameState.banco.verde;document.getElementById('crisis-amarillo').textContent=gameState.banco.amarillo;
@@ -400,12 +433,14 @@ function render(gameState){
   }
 
   document.getElementById('facilitator-card').style.display=facilitator?'block':'none';
-  const subsidy=document.getElementById('btn-subsidy'),regen=document.getElementById('btn-regen'),next=document.getElementById('btn-next');
-  subsidy.classList.toggle('hidden',ronda!==3||gameState.subsidioAplicado||gameState.terminado);
+  const teamRegen=document.getElementById('btn-team-regen'),regen=document.getElementById('btn-regen'),next=document.getElementById('btn-next');
+  teamRegen.classList.toggle('hidden',ronda!==3||gameState.regeneracionEquipoAplicada||gameState.terminado);
   const regenPendiente=[2,6].includes(ronda)&&!gameState.regenAplicada[ronda]&&!gameState.terminado;regen.classList.toggle('hidden',!regenPendiente);
   next.disabled=gameState.terminado;next.textContent=gameState.terminado?'✅ Juego finalizado':ronda<TOTAL_RONDAS?`Avanzar a Ronda ${ronda+1} →`:'🏁 Finalizar y mostrar ganador';
 
   renderTorres(gameState);renderRanking(gameState);
+  if(ronda===1&&previous&&previous.ronda!==1)rondasInformadas.clear();
+  mostrarInfoRonda(ronda);
   if(gameState.terminado&&gameState.resultadoFinal&&!winnerShown)mostrarGanador(gameState.resultadoFinal,facilitator);
   else if(!gameState.terminado&&previous&&previous.terminado){winnerShown=false;document.getElementById('winner-wrap').style.display='none';playSound('success');}
   else if(previous&&previous.ronda!==gameState.ronda)playSound('round');
@@ -468,6 +503,7 @@ document.getElementById('f-code').addEventListener('input',event=>{event.target.
 document.getElementById('f-code').addEventListener('keydown',event=>{if(event.key==='Enter')enviarLobby();});
 document.getElementById('f-nombre').addEventListener('keydown',event=>{if(event.key==='Enter'&&(lobbyMode==='crear'||selectedTeam))enviarLobby();});
 document.getElementById('modal-wrap').addEventListener('click',function(event){if(event.target===this)cerrarModal();});
+document.getElementById('round-info-wrap').addEventListener('click',function(event){if(event.target===this)cerrarInfoRonda();});
 if(roomFromQR.length===5)abrirFlujo('unirse');
 </script>
 </body>
