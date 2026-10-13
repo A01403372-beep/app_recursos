@@ -7,7 +7,7 @@ const QRCode = require('qrcode');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
-const APP_VERSION = '1.1.2';
+const APP_VERSION = '1.2.0';
 
 app.get('/api/version', (_req, res) => {
   res.set('Cache-Control', 'no-store');
@@ -79,6 +79,14 @@ function nuevoJugador(nombre, equipo) {
   };
 }
 
+function nuevasFichasDemostracion() {
+  return {
+    fichas: { ...FICHAS_INICIO },
+    usadas: { verde: 0, amarillo: 0 },
+    puntos: 0
+  };
+}
+
 function calcularResultado(room) {
   const totales = {};
 
@@ -136,8 +144,13 @@ function snapshot(room) {
     banco: { ...room.banco },
     facilitador: room.facilitador,
     facilitadorNombre: room.facilitadorNombre,
+    facilitadorDemo: {
+      fichas: { ...room.facilitadorDemo.fichas },
+      usadas: { ...room.facilitadorDemo.usadas },
+      puntos: room.facilitadorDemo.puntos
+    },
     regenAplicada: { ...room.regenAplicada },
-    subsidioAplicado: room.subsidioAplicado,
+    regeneracionEquipoAplicada: room.regeneracionEquipoAplicada,
     terminado: room.terminado,
     resultadoFinal: room.resultadoFinal
   };
@@ -161,6 +174,10 @@ function aplicarRegeneracion(room) {
     player.fichas.verde = Math.min(MAX_VERDE, player.fichas.verde + recuperadas);
   });
 
+  const demo = room.facilitadorDemo;
+  const recuperadasDemo = Math.max(0, 3 - Math.floor(demo.fichas.rojo / 2));
+  demo.fichas.verde = Math.min(MAX_VERDE, demo.fichas.verde + recuperadasDemo);
+
   room.regenAplicada[room.ronda] = true;
   return true;
 }
@@ -172,7 +189,7 @@ function configurarRonda(room) {
 
   if (room.ronda === 3) {
     room.banco = { ...BANCO_GOBIERNO };
-    room.subsidioAplicado = false;
+    room.regeneracionEquipoAplicada = false;
   }
 
   if (room.ronda === 5) {
@@ -199,6 +216,13 @@ io.on('connection', (socket) => {
     return room ? room.players.get(socket.id) : null;
   }
 
+  function getParticipanteODemo(room) {
+    if (!room) return null;
+    return room.facilitador === socket.id
+      ? room.facilitadorDemo
+      : room.players.get(socket.id);
+  }
+
   function esFacilitador(room) {
     return Boolean(room && room.facilitador === socket.id);
   }
@@ -223,8 +247,9 @@ io.on('connection', (socket) => {
       banco: { ...BANCO_GOBIERNO },
       facilitador: socket.id,
       facilitadorNombre: nombre,
+      facilitadorDemo: nuevasFichasDemostracion(),
       regenAplicada: { 2: false, 6: false },
-      subsidioAplicado: false,
+      regeneracionEquipoAplicada: false,
       terminado: false,
       resultadoFinal: null,
       creadaEn: Date.now()
@@ -278,7 +303,7 @@ io.on('connection', (socket) => {
 
   socket.on('usar-verde', () => {
     const room = getRoom();
-    const player = getPlayer(room);
+    const player = getParticipanteODemo(room);
     if (!room || room.terminado || !player || player.fichas.verde <= 0) return;
 
     player.fichas.verde -= 1;
@@ -289,7 +314,7 @@ io.on('connection', (socket) => {
 
   socket.on('usar-amarillo', () => {
     const room = getRoom();
-    const player = getPlayer(room);
+    const player = getParticipanteODemo(room);
     if (!room || room.terminado || !player || player.fichas.amarillo <= 0) return;
 
     player.fichas.amarillo -= 1;
@@ -301,7 +326,7 @@ io.on('connection', (socket) => {
 
   socket.on('devolver-verde', () => {
     const room = getRoom();
-    const player = getPlayer(room);
+    const player = getParticipanteODemo(room);
     if (
       !room || room.terminado || !player || player.usadas.verde <= 0 ||
       player.fichas.verde >= MAX_VERDE || player.puntos < 1
@@ -315,7 +340,7 @@ io.on('connection', (socket) => {
 
   socket.on('devolver-amarillo', () => {
     const room = getRoom();
-    const player = getPlayer(room);
+    const player = getParticipanteODemo(room);
     if (
       !room || room.terminado || !player || player.usadas.amarillo <= 0 ||
       player.fichas.amarillo >= MAX_AMARILLO || player.fichas.rojo <= 0 ||
@@ -373,17 +398,23 @@ io.on('connection', (socket) => {
   });
 
   // Ronda 3: entrega 2 residuos y recibe 1 ficha verde.
-  socket.on('intercambiar-residuos', () => {
+  socket.on('intercambiar-residuos', (responder = () => {}) => {
+    if (typeof responder !== 'function') responder = () => {};
     const room = getRoom();
     const player = getPlayer(room);
-    if (!room || room.terminado || room.ronda !== 3 || !player) return;
+    if (!room || room.terminado || room.ronda !== 3 || !player) {
+      responder({ ok: false, mensaje: 'El canje solo estÃ¡ disponible para participantes durante la ronda 3.' });
+      return;
+    }
 
     if (player.fichas.rojo < 2) {
       socket.emit('toast', { msg: 'Necesitas 2 residuos para realizar el canje.', tipo: 'error' });
+      responder({ ok: false, mensaje: 'Necesitas 2 residuos para realizar el canje.' });
       return;
     }
     if (player.fichas.verde >= MAX_VERDE) {
       socket.emit('toast', { msg: 'Ya tienes el mÃ¡ximo de fichas verdes.', tipo: 'error' });
+      responder({ ok: false, mensaje: 'Ya tienes el mÃ¡ximo de fichas verdes.' });
       return;
     }
 
@@ -391,14 +422,15 @@ io.on('connection', (socket) => {
     player.fichas.verde += 1;
     broadcast(room);
     toast(room, `${player.nombre} canjeÃ³ 2 residuos por 1 ficha verde â™»ï¸`, 'success');
+    responder({ ok: true });
   });
 
   // Ronda 3: +1 verde para cada integrante de equipos con promedio de residuos <= 2.
-  socket.on('aplicar-subsidio', () => {
+  socket.on('aplicar-regeneracion-equipo', () => {
     const room = getRoom();
     if (
       !room || room.terminado || room.ronda !== 3 || !esFacilitador(room) ||
-      room.subsidioAplicado
+      room.regeneracionEquipoAplicada
     ) return;
 
     const equipos = {};
@@ -418,13 +450,13 @@ io.on('connection', (socket) => {
       }
     });
 
-    room.subsidioAplicado = true;
+    room.regeneracionEquipoAplicada = true;
     broadcast(room);
     toast(
       room,
       elegibles.length
-        ? `ðŸŽ Subsidio aplicado a: ${elegibles.map((equipo) => `Equipo ${equipo}`).join(', ')}.`
-        : 'No hubo equipos elegibles para el subsidio.',
+        ? `ðŸŒ± RegeneraciÃ³n de equipo aplicada a: ${elegibles.map((equipo) => `Equipo ${equipo}`).join(', ')}.`
+        : 'No hubo equipos elegibles para la RegeneraciÃ³n de equipo.',
       elegibles.length ? 'success' : 'info'
     );
   });
@@ -476,7 +508,7 @@ io.on('connection', (socket) => {
     room.ronda = 1;
     room.banco = { ...BANCO_GOBIERNO };
     room.regenAplicada = { 2: false, 6: false };
-    room.subsidioAplicado = false;
+    room.regeneracionEquipoAplicada = false;
     room.terminado = false;
     room.resultadoFinal = null;
 
@@ -485,6 +517,7 @@ io.on('connection', (socket) => {
       player.usadas = { verde: 0, amarillo: 0 };
       player.puntos = 0;
     });
+    room.facilitadorDemo = nuevasFichasDemostracion();
 
     broadcast(room);
     toast(room, 'ðŸ”„ Juego reiniciado.', 'info');
@@ -508,6 +541,11 @@ io.on('connection', (socket) => {
 
       room.facilitador = nuevoFacilitadorId;
       room.facilitadorNombre = nuevoFacilitador.nombre;
+      room.facilitadorDemo = {
+        fichas: { ...nuevoFacilitador.fichas },
+        usadas: { ...nuevoFacilitador.usadas },
+        puntos: nuevoFacilitador.puntos
+      };
       room.players.delete(nuevoFacilitadorId);
       toast(room, 'âš™ï¸ Se asignÃ³ un nuevo facilitador.', 'info');
     }
