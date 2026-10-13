@@ -7,6 +7,15 @@ const QRCode = require('qrcode');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
+const APP_VERSION = '1.1.2';
+
+app.get('/api/version', (_req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    version: APP_VERSION,
+    commit: process.env.RENDER_GIT_COMMIT || null
+  });
+});
 
 app.get('/api/qr', async (req, res) => {
   const url = typeof req.query.url === 'string' ? req.query.url.trim() : '';
@@ -31,7 +40,13 @@ app.get('/api/qr', async (req, res) => {
   }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-store');
+    }
+  }
+}));
 
 // â”€â”€ ConfiguraciÃ³n original del juego â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const rooms = new Map();
@@ -481,11 +496,19 @@ io.on('connection', (socket) => {
 
     const player = room.players.get(socket.id);
     room.players.delete(socket.id);
-    if (room.players.size === 0) return;
 
     if (room.facilitador === socket.id) {
-      room.facilitador = room.players.keys().next().value;
-      room.facilitadorNombre = room.players.get(room.facilitador).nombre;
+      if (room.players.size === 0) {
+        rooms.delete(room.code);
+        return;
+      }
+
+      const nuevoFacilitadorId = room.players.keys().next().value;
+      const nuevoFacilitador = room.players.get(nuevoFacilitadorId);
+
+      room.facilitador = nuevoFacilitadorId;
+      room.facilitadorNombre = nuevoFacilitador.nombre;
+      room.players.delete(nuevoFacilitadorId);
       toast(room, 'âš™ï¸ Se asignÃ³ un nuevo facilitador.', 'info');
     }
 
