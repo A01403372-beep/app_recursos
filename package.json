@@ -1,7 +1,7 @@
 {
   "name": "reto-de-los-recursos",
-  "version": "1.0.0",
-  "description": "Juego multijugador de sostenibilidad - Reto de los Recursos",
+  "version": "1.1.0",
+  "description": "Juego multijugador de sostenibilidad con salas, equipos, audio y resultado final",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
