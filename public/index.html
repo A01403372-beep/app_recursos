@@ -411,7 +411,7 @@ function render(gameState){
   document.getElementById('player-tower-card').style.display='block';
   document.getElementById('player-stats').style.display='grid';
   document.getElementById('player-actions').style.display='block';
-  document.getElementById('tower-card-title').textContent=facilitator?'Mis fichas de demostración':'Mi torre · fichas usadas';
+  document.getElementById('tower-card-title').textContent=facilitator?'Mis fichas (Ejemplo)':'Mi torre · fichas usadas';
   if(facilitator)actualizarInvitacion(gameState.code);
   if(me){
     document.getElementById('s-verde').textContent=me.fichas.verde;document.getElementById('s-amarillo').textContent=me.fichas.amarillo;document.getElementById('s-rojo').textContent=me.fichas.rojo;
